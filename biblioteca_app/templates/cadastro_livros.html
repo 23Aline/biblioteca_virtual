@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" />
+    <title>Cadastro de livros</title>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <a href="{% url 'home' %}" class="w3-xlarge">
+                <img src="{% static 'img/logo.png' %}" alt="Logo Acervo Digital" class="logo">
+                Acervo Digital
+            </a>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <nav id="side-menu" class="side-menu">
+        <ul>
+            <li><a href="{% url 'cadastro_livros' %}">Cadastro de Livros</a></li>
+            <li><a href="{% url 'cadastro_leitor' %}">Cadastro de Leitor</a></li>
+            <li><a href="{% url 'emprestimo' %}">Empréstimo</a></li>
+            <li><a href="{% url 'reservas' %}">Reservas</a></li>
+            <li><a href="{% url 'multa' %}">Multa</a></li>
+            <li><a href="{% url 'estoque' %}">Estoque</a></li>
+            <li><a href="{% url 'usuarios' %}">Usuários</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="container-form">
+            <h2>Cadastro de livros</h2>
+            <form method="post" action="{% url 'cadastro_livros' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="titulo">Título</label>
+                        <input type="text" id="titulo" name="titulo" placeholder="Selecione ou digite" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="autor">Autor</label>
+                        <input type="text" id="autor" name="autor" placeholder="Selecione ou digite" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edicao">Edição</label>
+                        <input type="number" id="edicao" name="edicao" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero_paginas">Número de páginas</label>
+                        <input type="number" id="numero_paginas" name="numero_paginas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="genero">Gênero</label>
+                        <select id="genero" name="genero">
+                            <option value="">Selecione</option>
+                            <option value="ficcao">Ficção</option>
+                            <option value="romance">Romance</option>
+                            <option value="fantasia">Fantasia</option>
+                            <option value="outros">Acadêmicos</option>
+                            <option value="outros">Drama</option>
+                            <option value="outros">Distopia</option>
+                            <option value="outros">Terror</option>
+                            <option value="outros">Suspense</option>
+                            <option value="outros">Autoajuda</option>
+                            <option value="outros">Biografia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="classificacao">Classificação</label>
+                        <input type="number" id="classificacao" name="classificacao" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade</label>
+                        <select id="quantidade" name="quantidade" required>
+                            <option value="" disabled selected>Selecione</option>
+                            {% for num in quantidades %}
+                            <option value="{{ num }}">{{ num }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sinopse">Sinopse</label>
+                        <input type="text" id="sinopse" name="sinopse" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="capa">Adicionar capa</label>
+                        <input type="file" id="capa" name="capa">
+                    </div>
+                </div>
+                <button type="submit" class="btn">Salvar</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="{% static 'script/script.js' %}"></script>
+</body>
+
+</html>

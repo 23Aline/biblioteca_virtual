@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" />
+    <title>Multa</title>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <a href="{% url 'home' %}" class="w3-xlarge">
+                <img src="{% static 'img/logo.png' %}" alt="Logo Acervo Digital" class="logo">
+                Acervo Digital
+            </a>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <nav id="side-menu" class="side-menu">
+        <ul>
+            <li><a href="{% url 'cadastro_livros' %}">Cadastro de Livros</a></li>
+            <li><a href="{% url 'cadastro_leitor' %}">Cadastro de Leitor</a></li>
+            <li><a href="{% url 'emprestimo' %}">Empréstimo</a></li>
+            <li><a href="{% url 'reservas' %}">Reservas</a></li>
+            <li><a href="{% url 'multa' %}">Multa</a></li>
+            <li><a href="{% url 'estoque' %}">Estoque</a></li>
+            <li><a href="{% url 'usuarios' %}">Usuários</a></li>
+        </ul>
+    </nav>
+
+    <main>
+    </main>
+
+    <script src="{% static 'script/script.js' %}"></script>
+</body>
+
+</html>

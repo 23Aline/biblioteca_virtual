@@ -1,0 +1,246 @@
+@media (max-width: 768px) {
+    .navbar {
+        padding: 30px 0;
+    }
+
+    .navbar a {
+        font-size: 22px; 
+    }
+
+    .side-menu {
+        width: 200px; 
+        padding-top: 70px;
+    }
+
+    .side-menu li {
+        padding: 12px 16px;
+    }
+
+    .side-menu a {
+        font-size: 16px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 30px 0;
+    }
+
+    .navbar li {
+        display: block; 
+        margin: 10px 0;
+    }
+
+    .navbar a {
+        font-size: 30px;
+    }
+
+    body {
+        padding-top: 130px; 
+    }
+
+    .side-menu {
+        width: 160px;
+        padding-top: 100px;
+    }
+
+    .side-menu li {
+        padding: 10px 14px;
+    }
+
+    .side-menu a {
+        font-size: 15px;
+    }
+}
+
+/*TELA DE CADASTRO DE LIVROS*/
+@media (max-width: 768px) {
+    .container-form {
+        max-width: 90%;
+        margin: 20px auto;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px;
+    }
+
+    .container-form h2 {
+        font-size: 1.5rem;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container-form {
+        max-width: 95%;
+        padding: 15px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr; 
+        gap: 10px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+
+/*TELA HOME*/
+@media (max-width: 768px) {
+    .livros-grid {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px;
+    }
+
+    .capa-container {
+        height: 250px; 
+    }
+
+    .livro-titulo {
+        font-size: 0.9rem;
+    }
+
+    .livro-autor {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .livros-grid {
+        grid-template-columns: 1fr; 
+        gap: 10px;
+    }
+
+    .capa-container {
+        height: 350px; 
+    }
+    
+    .livro-card {
+        margin: 0 auto; 
+        max-width: 300px;
+    }
+}
+
+/*TELA DE CADASTRO DE LEITOR*/
+@media (max-width: 768px) {
+    .radio-group {
+        grid-column: 1 / span 2; 
+    }
+
+    .radio-options {
+        flex-direction: column; 
+        gap: 10px; 
+    }
+
+    .radio-options label {
+        padding: 8px 12px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .radio-group {
+        grid-column: 1 / span 1; 
+    }
+
+    .radio-options label {
+        width: 100%; 
+        text-align: center;
+    }
+}
+
+/*TELA DE EMPRESTIMO*/
+@media (max-width: 768px) {
+    .emprestimo-content {
+        flex-direction: column; 
+        align-items: center; 
+    }
+
+    .emprestimo-info,
+    .emprestimo-form-container {
+        width: 100%;
+        max-width: 100%; 
+        height: auto;
+        padding: 20px;
+    }
+
+    .emprestimo-info {
+        background-color: #f2f2f2; 
+        margin-bottom: 20px; 
+        padding-top: 100px;
+    }
+
+    .livro-info-text {
+        font-size: 18px; 
+    }
+
+    .form-buttons {
+        flex-direction: column; 
+        gap: 10px; 
+    }
+
+    .btn-confirmar,
+    .btn-limpar {
+        width: 100%; 
+    }
+}
+
+@media (max-width: 480px) {
+    .container-emprestimo {
+        padding: 15px; 
+    }
+
+    .container-emprestimo h2 {
+        font-size: 24px; 
+    }
+    
+    .emprestimo-content {
+        gap: 15px;
+    }
+
+    .emprestimo-info-container h3 {
+        font-size: 1rem; 
+    }
+    
+    #livro-capa {
+        max-width: 100px; 
+    }
+
+    .livro-info-text {
+        font-size: 14px; 
+    }
+
+    .form-group label {
+        font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group p.info-adicional {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    .form-buttons {
+        gap: 8px; 
+    }
+
+    .btn-confirmar, .btn-limpar {
+        padding: 10px;
+        font-size: 12px;
+    }
+}

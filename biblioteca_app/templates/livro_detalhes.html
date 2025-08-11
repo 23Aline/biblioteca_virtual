@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" />
+    <title>Detalhes</title>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <a href="{% url 'home' %}" class="w3-xlarge">
+                <img src="{% static 'img/logo.png' %}" alt="Logo Acervo Digital" class="logo">
+                Acervo Digital
+            </a>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <nav id="side-menu" class="side-menu">
+        <ul>
+            <li><a href="{% url 'cadastro_livros' %}">Cadastro de Livros</a></li>
+            <li><a href="{% url 'cadastro_leitor' %}">Cadastro de Leitor</a></li>
+            <li><a href="{% url 'emprestimo' %}">Empréstimo</a></li>
+            <li><a href="{% url 'reservas' %}">Reservas</a></li>
+            <li><a href="{% url 'multa' %}">Multa</a></li>
+            <li><a href="{% url 'estoque' %}">Estoque</a></li>
+            <li><a href="{% url 'usuarios' %}">Usuários</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="livro-detalhes-container">
+            <div class="livro-detalhes-header">
+                <h2>{{ livro.titulo }}</h2>
+            </div>
+            <div class="livro-detalhes-grid">
+                <div class="livro-info-principal">
+                    <div class="status-tag {% if disponivel %}disponivel{% else %}esgotado{% endif %}">
+                        {% if disponivel %}
+                        Disponível
+                        {% else %}
+                        Esgotado
+                        {% endif %}
+                    </div>
+                    {% if livro.capa %}
+                    <img src="{{ livro.capa.url }}" alt="Capa do livro" class="capa-detalhes">
+                    {% else %}
+                    <div class="capa-placeholder-detalhes"></div>
+                    {% endif %}
+                    <div class="livro-dados-texto">
+                        <p>Título: {{ livro.titulo }}</p>
+                        <p>Autor: {{ livro.autor }}</p>
+                        <p>Genero: {{ livro.genero }}</p>
+                        <p>Classificação: {{ livro.classificacao }}</p>
+                        <p>Edição: {{ livro.edicao }}</p>
+                        <p>Número de páginas: {{ livro.numero_paginas }}</p>
+                    </div>
+                </div>
+                <div class="livro-sinopse">
+                    <h3>Descrição:</h3>
+                    <p>{{ livro.sinopse }}</p>
+                    {% if not disponivel %}
+                    <p class="data-devolucao-info">Data de devolução mais próxima: **{{
+                        data_devolucao_proxima|date:"d/m/Y" }}**</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="livro-detalhes-botoes">
+                <a href="{% url 'home' %}" class="btn btn-voltar-detalhes">Voltar</a>
+                {% if disponivel %}
+                <a href="{% url 'emprestimo_com_livro' livro.id %}" class="btn btn-reservar-detalhes">Reservar</a>
+                {% else %}
+                <button class="btn btn-esgotado" disabled>Reservar</button>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'script/script.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,637 @@
+.navbar {
+    background-color: #9ABF80;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 5px; 
+    display: flex; 
+    align-items: center; 
+    z-index: 1010;
+    justify-content: space-between;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 35px;
+    font-weight: bold;
+    margin-left: 40px;
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+.logo {
+    height: 55px; 
+    width: auto;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -250px; 
+    width: 250px;
+    height: 100%;
+    background-color: #9ABF80;
+    color: white;
+    transition: right 0.3s ease;
+    z-index: 1000;
+    padding-top: 100px;
+    text-align: center;
+}
+
+.side-menu.active {
+    right: 0; 
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-menu li {
+    padding: 15px 40px;
+}
+
+.side-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.side-menu a:hover {
+    background-color: #53703f;
+    display: block;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.menu-toggle:focus {
+    outline: none;
+}
+
+main {
+    padding-top: 100px; 
+}
+
+/*TELA DE CADASTRO DE LIVROS*/
+.container-form {
+    background-color: #E5E3D4;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.container-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+    font-size: 1rem;
+    color: #333;
+}
+
+.form-group input::placeholder,
+.form-group select option:first-child {
+    color: #999;
+}
+
+.form-group input[type="file"] {
+    padding: 6px;
+    background-color: #e9e9e9;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.btn {
+    background-color: #1C325B;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #8693ab;
+}
+
+/*TELA HOME*/
+.livros-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 30px; 
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.livro-card {
+    text-decoration: none;
+    color: inherit; 
+    display: block; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.livro-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.capa-container {
+    width: 190px;
+    height: 240px; 
+    overflow: hidden;
+}
+
+.capa-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.capa-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #e0e0e0;
+}
+
+.livro-info {
+    padding: 10px;
+}
+
+.livro-titulo {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 5px 0 0;
+}
+
+.livro-autor {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+/*TELA DE CADASTRO DE LEITOR*/
+.radio-group {
+    grid-column: 1 / span 3; 
+    margin-top: 20px;
+}
+
+.radio-group label {
+    margin-bottom: 10px;
+}
+
+.radio-options {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+}
+
+.radio-options input[type="radio"] {
+    display: none;
+}
+
+.radio-options label {
+    cursor: pointer;
+    background-color: #999;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.radio-options input[type="radio"]:checked + label {
+    background-color: #9b2c37; 
+    color: white;
+}
+
+/*TELA DE EMPRESTIMO*/
+.container-emprestimo {
+    padding: 30px;
+    margin: 0 auto;
+    max-width: 900px;
+}
+
+.container-emprestimo h2 {
+    margin-top: 0;
+    font-size: 30px;
+}
+
+.emprestimo-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.emprestimo-info {
+    flex: 1;
+    padding: 10px;
+    width: 400px;
+    height: 500px;
+    white-space: nowrap;
+    background-color: #E5E3D4;
+}
+
+.emprestimo-form-container {
+    flex: 1;
+    padding: 20px;
+    background-color: #E5E3D4;
+    max-width: 400px;
+}
+
+#livro-capa {
+    display: block; 
+    max-width: 150px;
+    height: auto;
+}
+
+.livro-info-text {
+    font-size: 20px;
+    margin: 5px 0;
+    margin-top: -50px;
+}
+
+#leitor-nome, #multa-info {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-confirmar {
+    background-color: #1C325B;
+    color: white;
+    border: none;
+    width: 100px;
+    padding: 12px;
+    margin-left: 70px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-limpar {
+    background-color: #9b2c37;
+    color: white;
+    border: none;
+    width: 100px;
+    padding: 12px;
+    margin-right: 70px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/*TELA LIVRO DETALHES*/
+.livro-detalhes-container {
+    max-width: 1000px;
+    margin: 1px auto;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.livro-detalhes-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.livro-detalhes-grid {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.livro-info-principal {
+    flex: 1;
+    text-align: center;
+    position: relative; 
+}
+
+.status-tag {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: -30px;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+.status-tag.disponivel {
+    background-color: #28a745;
+}
+
+.status-tag.esgotado {
+    background-color: #dc3545;
+}
+
+.capa-detalhes {
+    width: 200px;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.capa-placeholder-detalhes {
+    width: 200px;
+    height: 300px;
+    background-color: #d0d0d0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.livro-dados-texto p {
+    margin: 5px 0;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.livro-sinopse {
+    flex: 2;
+}
+
+.livro-sinopse h3 {
+    font-size: 1.2rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.data-devolucao-info {
+    font-weight: bold;
+    color: #dc3545;
+    margin-top: 15px;
+}
+
+.btn-voltar-detalhes, .btn-reservar-detalhes, .btn-esgotado {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.livro-detalhes-botoes {
+    text-align: center;
+    display: flex; 
+    justify-content: center; 
+    gap: 20px; 
+    margin-top: 10px; 
+}
+
+.btn-voltar-detalhes {
+    background-color: #9b2c37;
+}
+
+.btn-reservar-detalhes {
+    background-color: #1C325B;
+}
+
+.btn-esgotado {
+    background-color: #8693ab;
+    cursor: not-allowed;
+}
+
+/* TELA DE ESTOQUE */
+.estoque-container {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.tabela-estoque {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-estoque thead th {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    text-align: left;
+}
+
+.tabela-estoque tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-estoque tbody tr:nth-child(even) {
+    background-color: #e9e9e9;
+}
+
+.botoes-acao {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.botoes-acao .btn-editar, .botoes-acao .btn-excluir {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+.botoes-acao .btn-editar {
+    background-color: #1C325B;
+}
+
+.botoes-acao .btn-excluir {
+    background-color: #9b2c37;
+}
+
+.botoes-acao .btn-excluir {
+    background-color: #9b2c37;
+    text-decoration: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+/* MODAL DE EDIÇÃO */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-conteudo {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fechar-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-conteudo h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.capa-preview {
+    max-width: 100px;
+    height: auto;
+    margin-top: 10px;
+}
+
+.modal-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.btn-salvar-modal, .btn-voltar-modal {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-salvar-modal {
+    background-color: #1C325B;
+}
+
+.btn-voltar-modal {
+    background-color: #9b2c37;
+}
+
+/* MODAL DE EDIÇÃO (Usuários) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-conteudo {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fechar-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-conteudo h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.btn-salvar-modal, .btn-voltar-modal {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-salvar-modal {
+    background-color: #28a745;
+}
+
+.btn-voltar-modal {
+    background-color: #dc3545;
+}

@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" />
+    <title>Estoque</title>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <a href="{% url 'home' %}" class="w3-xlarge">
+                <img src="{% static 'img/logo.png' %}" alt="Logo Acervo Digital" class="logo">
+                Acervo Digital
+            </a>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <nav id="side-menu" class="side-menu">
+        <ul>
+            <li><a href="{% url 'cadastro_livros' %}">Cadastro de Livros</a></li>
+            <li><a href="{% url 'cadastro_leitor' %}">Cadastro de Leitor</a></li>
+            <li><a href="{% url 'emprestimo' %}">Empréstimo</a></li>
+            <li><a href="{% url 'reservas' %}">Reservas</a></li>
+            <li><a href="{% url 'multa' %}">Multa</a></li>
+            <li><a href="{% url 'estoque' %}">Estoque</a></li>
+            <li><a href="{% url 'usuarios' %}">Usuários</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="estoque-container">
+            <h2>Estoque</h2>
+            <table class="tabela-estoque">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Total</th>
+                        <th>Disponíveis</th>
+                        <th>Emprestados</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for livro in livros %}
+                    <tr data-livro-id="{{ livro.id }}" data-livro-titulo="{{ livro.titulo }}">
+                        <td>{{ livro.titulo }}</td>
+                        <td>{{ livro.autor }}</td>
+                        <td>{{ livro.quantidade }}</td>
+                        <td>{{ livro.disponiveis }}</td>
+                        <td>{{ livro.emprestados }}</td>
+                        <td class="botoes-acao">
+                            <button class="btn-editar">Editar</button>
+                            <a href="{% url 'excluir_livro' livro.id %}" class="btn-excluir">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="modal-edicao" class="modal">
+            <div class="modal-conteudo">
+                <span class="fechar-modal">&times;</span>
+                <h3>Editar Livro</h3>
+                <form id="form-edicao" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="livro-id-edicao" name="livro_id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="titulo-edicao">Título</label>
+                            <input type="text" id="titulo-edicao" name="titulo-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="autor-edicao">Autor</label>
+                            <input type="text" id="autor-edicao" name="autor-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="genero-edicao">Gênero</label>
+                            <input type="text" id="genero-edicao" name="genero-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="classificacao-edicao">Classificação</label>
+                            <input type="number" id="classificacao-edicao" name="classificacao-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="quantidade-edicao">Quantidade</label>
+                            <input type="number" id="quantidade-edicao" name="quantidade-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="edicao-edicao">Edição</label>
+                            <input type="number" id="edicao-edicao" name="edicao-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="numero_paginas-edicao">Número de Páginas</label>
+                            <input type="number" id="numero_paginas-edicao" name="numero_paginas-edicao">
+                        </div>
+                        <div class="form-group">
+                            <label for="sinopse-edicao">Sinopse</label>
+                            <textarea id="sinopse-edicao" name="sinopse-edicao"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="capa-edicao">Capa atual</label>
+                            <img id="capa-preview" src="" alt="Capa atual" class="capa-preview">
+                        </div>
+                        <div class="form-group">
+                            <label for="capa-nova-edicao">Nova Capa</label>
+                            <input type="file" id="capa-nova-edicao" name="capa-nova-edicao">
+                        </div>
+                    </div>
+                    <div class="modal-botoes">
+                        <button type="submit" class="btn btn-salvar-modal">Salvar</button>
+                        <button type="button" class="btn btn-voltar-modal">Voltar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="{% static 'script/script.js' %}"></script>
+</body>
+
+</html>
