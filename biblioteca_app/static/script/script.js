@@ -69,68 +69,68 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-const livroBuscaInput = document.getElementById('livro-busca');
-if (livroBuscaInput) {
-    const livroCapaDisplay = document.getElementById('livro-capa');
-    const livroTituloDisplay = document.getElementById('livro-titulo');
-    const livroAutorDisplay = document.getElementById('livro-autor');
-    const livroEdicaoDisplay = document.getElementById('livro-edicao');
-    const livroNumeroPaginasDisplay = document.getElementById('livro-numero_paginas');
-    const livroGeneroDisplay = document.getElementById('livro-genero');
-    const livroClassificacaoDisplay = document.getElementById('livro-classificacao');
-    const modalIndisponivel = document.getElementById('modal-livro-indisponivel');
-    const mensagemIndisponivel = document.getElementById('mensagem-indisponivel');
-    const fecharModalIndisponivel = modalIndisponivel.querySelector('.fechar-modal');
-    const voltarModalIndisponivel = modalIndisponivel.querySelector('.btn-voltar-modal');
+    const livroBuscaInput = document.getElementById('livro-busca');
+    if (livroBuscaInput) {
+        const livroCapaDisplay = document.getElementById('livro-capa');
+        const livroTituloDisplay = document.getElementById('livro-titulo');
+        const livroAutorDisplay = document.getElementById('livro-autor');
+        const livroEdicaoDisplay = document.getElementById('livro-edicao');
+        const livroNumeroPaginasDisplay = document.getElementById('livro-numero_paginas');
+        const livroGeneroDisplay = document.getElementById('livro-genero');
+        const livroClassificacaoDisplay = document.getElementById('livro-classificacao');
+        const modalIndisponivel = document.getElementById('modal-livro-indisponivel');
+        const mensagemIndisponivel = document.getElementById('mensagem-indisponivel');
+        const fecharModalIndisponivel = modalIndisponivel.querySelector('.fechar-modal');
+        const voltarModalIndisponivel = modalIndisponivel.querySelector('.btn-voltar-modal');
 
-    fecharModalIndisponivel.addEventListener('click', () => { modalIndisponivel.style.display = 'none'; });
-    voltarModalIndisponivel.addEventListener('click', () => { modalIndisponivel.style.display = 'none'; });
-    window.addEventListener('click', (event) => {
-        if (event.target === modalIndisponivel) { modalIndisponivel.style.display = 'none'; }
-    });
+        fecharModalIndisponivel.addEventListener('click', () => { modalIndisponivel.style.display = 'none'; });
+        voltarModalIndisponivel.addEventListener('click', () => { modalIndisponivel.style.display = 'none'; });
+        window.addEventListener('click', (event) => {
+            if (event.target === modalIndisponivel) { modalIndisponivel.style.display = 'none'; }
+        });
 
-    livroBuscaInput.addEventListener('change', () => {
-        const tituloBusca = livroBuscaInput.value;
-        if (tituloBusca) {
-            fetch(`/api/livro/completo/?titulo=${encodeURIComponent(tituloBusca)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => { throw new Error(errorData.erro); });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    livroCapaDisplay.src = data.capa;
-                    livroCapaDisplay.style.display = 'block';
-                    livroTituloDisplay.innerText = data.titulo;
-                    livroAutorDisplay.innerText = data.autor;
-                    livroEdicaoDisplay.innerText = `Edição: ${data.edicao}`;
-                    livroNumeroPaginasDisplay.innerText = `Páginas: ${data.numero_paginas}`;
-                    livroGeneroDisplay.innerText = `Gênero: ${data.genero}`;
-                    livroClassificacaoDisplay.innerText = `Classificação: ${data.classificacao}`;
-
-                    if (!data.disponivel) {
-                        let mensagem = "Livro indisponível.";
-                        if (data.data_devolucao_proxima) {
-                            mensagem += ` Data mais próxima de devolução: ${data.data_devolucao_proxima}`;
+        livroBuscaInput.addEventListener('change', () => {
+            const tituloBusca = livroBuscaInput.value;
+            if (tituloBusca) {
+                fetch(`/api/livro/completo/?titulo=${encodeURIComponent(tituloBusca)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => { throw new Error(errorData.erro); });
                         }
-                        mensagemIndisponivel.innerText = mensagem;
-                        modalIndisponivel.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    alert(error.message);
-                    livroCapaDisplay.style.display = 'none';
-                    livroTituloDisplay.innerText = 'Livro não encontrado.';
-                    livroAutorDisplay.innerText = '';
-                    livroEdicaoDisplay.innerText = '';
-                    livroNumeroPaginasDisplay.innerText = '';
-                    livroGeneroDisplay.innerText = '';
-                    livroClassificacaoDisplay.innerText = '';
-                });
-        }
-    });
-}
+                        return response.json();
+                    })
+                    .then(data => {
+                        livroCapaDisplay.src = data.capa;
+                        livroCapaDisplay.style.display = 'block';
+                        livroTituloDisplay.innerText = data.titulo;
+                        livroAutorDisplay.innerText = data.autor;
+                        livroEdicaoDisplay.innerText = `Edição: ${data.edicao}`;
+                        livroNumeroPaginasDisplay.innerText = `Páginas: ${data.numero_paginas}`;
+                        livroGeneroDisplay.innerText = `Gênero: ${data.genero}`;
+                        livroClassificacaoDisplay.innerText = `Classificação: ${data.classificacao}`;
+
+                        if (!data.disponivel) {
+                            let mensagem = "Livro indisponível.";
+                            if (data.data_devolucao_proxima) {
+                                mensagem += ` Data mais próxima de devolução: ${data.data_devolucao_proxima}`;
+                            }
+                            mensagemIndisponivel.innerText = mensagem;
+                            modalIndisponivel.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                        livroCapaDisplay.style.display = 'none';
+                        livroTituloDisplay.innerText = 'Livro não encontrado.';
+                        livroAutorDisplay.innerText = '';
+                        livroEdicaoDisplay.innerText = '';
+                        livroNumeroPaginasDisplay.innerText = '';
+                        livroGeneroDisplay.innerText = '';
+                        livroClassificacaoDisplay.innerText = '';
+                    });
+            }
+        });
+    }
 
     const limparBtn = document.querySelector('.btn-limpar');
     if (limparBtn) {
@@ -246,6 +246,74 @@ if (livroBuscaInput) {
         voltarModalLeitor.addEventListener('click', () => { modalLeitor.style.display = 'none'; });
         window.addEventListener('click', function (event) {
             if (event.target === modalLeitor) { modalLeitor.style.display = 'none'; }
+        });
+    }
+
+    const modalDevolucao = document.getElementById('modal-devolucao');
+    if (modalDevolucao) {
+        const botoesDevolucao = document.querySelectorAll('.btn-devolucao');
+        const fecharModalSpan = modalDevolucao.querySelector('.fechar-modal');
+        const voltarModalBtn = modalDevolucao.querySelector('.btn-voltar-modal');
+        const dataEntregaInput = document.getElementById('data-entrega');
+        const valorMultaDisplay = document.getElementById('valor-multa');
+        const valorMultaHidden = document.getElementById('valor-multa-hidden');
+        const formDevolucao = document.getElementById('form-devolucao');
+
+        function fecharModal() {
+            modalDevolucao.style.display = 'none';
+        }
+
+        fecharModalSpan.addEventListener('click', fecharModal);
+        voltarModalBtn.addEventListener('click', fecharModal);
+        window.addEventListener('click', (event) => {
+            if (event.target === modalDevolucao) { fecharModal(); }
+        });
+
+        botoesDevolucao.forEach(botao => {
+            botao.addEventListener('click', (event) => {
+                const linha = event.target.closest('tr');
+                const emprestimoId = botao.dataset.emprestimoId;
+                const dataEmprestimo = linha.dataset.emprestimoData;
+
+                const titulo = linha.querySelector('td:nth-child(1)').textContent.trim();
+                const leitor = linha.querySelector('td:nth-child(2)').textContent.trim();
+                const dataPrevista = linha.querySelector('td:nth-child(3)').textContent.trim();
+                const atrasado = linha.querySelector('td:nth-child(4)').textContent.trim();
+
+                document.getElementById('emprestimo-id').value = emprestimoId;
+                document.getElementById('titulo-devolucao').textContent = titulo;
+                document.getElementById('leitor-devolucao').textContent = leitor;
+                document.getElementById('data-emprestimo-devolucao').textContent = dataEmprestimo;
+                document.getElementById('data-devolucao-prevista').textContent = dataPrevista;
+                document.getElementById('atrasado-devolucao').textContent = atrasado;
+
+                formDevolucao.action = `/reservas/devolver/${emprestimoId}/`;
+
+                modalDevolucao.style.display = 'block';
+            });
+        });
+
+        dataEntregaInput.addEventListener('change', () => {
+            const emprestimoId = document.getElementById('emprestimo-id').value;
+            const dataEntrega = dataEntregaInput.value;
+
+            if (dataEntrega) {
+                fetch(`/api/calcular_multa/?emprestimo_id=${emprestimoId}&data_entrega=${dataEntrega}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        valorMultaDisplay.textContent = `R$ ${data.valor_multa.toFixed(2).replace('.', ',')}`;
+                        valorMultaHidden.value = data.valor_multa;
+                        if (data.atraso) {
+                            document.getElementById('atrasado-devolucao').textContent = 'Sim';
+                        } else {
+                            document.getElementById('atrasado-devolucao').textContent = 'Não';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao calcular multa:', error);
+                        valorMultaDisplay.textContent = 'Erro';
+                    });
+            }
         });
     }
 });

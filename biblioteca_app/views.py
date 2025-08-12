@@ -4,9 +4,13 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404 
 from django.db import IntegrityError 
 from django.contrib import messages
-from .models import Livro, Leitor, Emprestimo
+from .models import Livro, Leitor, Emprestimo, Devolucao
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, date, datetime
+import decimal 
+
+def multa(request):
+    return render(request, 'multa.html')
 
 def home(request):
     livros = Livro.objects.all()
@@ -18,10 +22,63 @@ def home(request):
     return render(request, 'home.html', context)
 
 def reservas(request):
-    return render(request, 'reservas.html')
+    emprestimos_ativos = Emprestimo.objects.filter(devolucao__isnull=True).order_by('data_devolucao')
+    hoje = date.today()
 
-def multa(request):
-    return render(request, 'multa.html')
+    for emprestimo in emprestimos_ativos:
+        emprestimo.atrasado = emprestimo.data_devolucao < hoje
+
+    context = {
+        'emprestimos': emprestimos_ativos
+    }
+    return render(request, 'reservas.html', context)
+
+def devolver_livro(request, emprestimo_id):
+    emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
+    if request.method == 'POST':
+        data_entrega_str = request.POST.get('data_entrega')
+        valor_multa_str = request.POST.get('valor_multa')
+        data_entrega = date.fromisoformat(data_entrega_str)
+
+        try:
+            valor_multa = decimal.Decimal(valor_multa_str or '0.00')
+        except decimal.InvalidOperation:
+            valor_multa = decimal.Decimal('0.00')
+
+        Devolucao.objects.create(
+            emprestimo=emprestimo,
+            data_devolucao_real=data_entrega,
+            valor_multa=valor_multa
+        )
+
+        if valor_multa > 0:
+            return redirect('multa')
+        else:
+            return redirect('reservas')
+    return redirect('reservas')
+
+def calcular_multa(request):
+    emprestimo_id = request.GET.get('emprestimo_id')
+    data_entrega_str = request.GET.get('data_entrega')
+
+    try:
+        emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id)
+        data_entrega = datetime.strptime(data_entrega_str, '%Y-%m-%d').date()
+        
+        valor_multa = 0.00
+        atraso = False
+
+        if emprestimo.data_devolucao:
+            if data_entrega > emprestimo.data_devolucao:
+                atraso = True
+                dias_atraso = (data_entrega - emprestimo.data_devolucao).days
+                valor_multa = dias_atraso * 2.50
+        
+        return JsonResponse({'valor_multa': round(valor_multa, 2), 'atraso': atraso})
+    except Emprestimo.DoesNotExist:
+        return JsonResponse({'erro': 'Empréstimo não encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'erro': 'Erro no cálculo da multa. Verifique os dados do empréstimo.'}, status=500)
 
 def cadastro_livros(request):
     if request.method == 'POST':
@@ -69,34 +126,47 @@ def cadastro_leitor(request):
     return render(request, 'cadastro_leitor.html')
 
 def emprestimo(request):
-    livros_cadastrados = Livro.objects.all()
-    context = {'livros': livros_cadastrados}
-
+    leitores = Leitor.objects.all()
+    livros_disponiveis = Livro.objects.filter(quantidade__gt=0)
+    context = {
+        'leitores': leitores,
+        'livros': livros_disponiveis
+    }
+    
     if request.method == 'POST':
-        cpf = request.POST.get('cpf')
-        titulo_livro = request.POST.get('livro')
-        data_emprestimo = request.POST.get('data_emprestimo')
+        cpf_leitor = request.POST.get('cpf')
+        livro_id = request.POST.get('livro')
+        data_emprestimo_str = request.POST.get('data_emprestimo')
+        data_devolucao_str = request.POST.get('data_devolucao')
 
         try:
-            leitor = Leitor.objects.get(cpf=cpf)
-            livro = Livro.objects.get(titulo=titulo_livro)
-
-            emprestimos_ativos = Emprestimo.objects.filter(livro=livro, data_devolucao__isnull=True).count()
-            if emprestimos_ativos >= livro.quantidade:
-                context['erro'] = "Não há cópias disponíveis deste livro para empréstimo."
-                return render(request, 'emprestimo.html', context)
-
-            novo_emprestimo = Emprestimo(
+            leitor = Leitor.objects.get(cpf=cpf_leitor)
+            livro = Livro.objects.get(pk=livro_id)
+            
+            data_emprestimo = datetime.strptime(data_emprestimo_str, '%d/%m/%Y').strftime('%Y-%m-%d')
+            data_devolucao = datetime.strptime(data_devolucao_str, '%d/%m/%Y').strftime('%Y-%m-%d')
+            
+            Emprestimo.objects.create(
                 leitor=leitor,
                 livro=livro,
                 data_emprestimo=data_emprestimo,
+                data_devolucao=data_devolucao
             )
-            novo_emprestimo.save()
-            return redirect('home')
-        except (Leitor.DoesNotExist, Livro.DoesNotExist):
-            context['erro'] = "Leitor ou Livro não encontrados."
-            return render(request, 'emprestimo.html', context)
-    
+            
+            livro.quantidade -= 1
+            livro.save()
+
+            return redirect('reservas')
+
+        except Leitor.DoesNotExist:
+            context['erro'] = "Leitor não encontrado."
+        except Livro.DoesNotExist:
+            context['erro'] = "Livro não encontrado."
+        except ValueError:
+            context['erro'] = "Formato de data inválido. Use dd/mm/aaaa."
+        
+        return render(request, 'emprestimo.html', context)
+
     return render(request, 'emprestimo.html', context)
 
 def buscar_leitor(request):

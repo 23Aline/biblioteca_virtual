@@ -42,9 +42,16 @@ class Emprestimo(models.Model):
     leitor = models.ForeignKey(Leitor, on_delete=models.CASCADE)
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
     data_emprestimo = models.DateField()
-    data_devolucao = models.DateField(null=True, blank=True) 
-    multa_paga = models.BooleanField(default=False)
+    data_devolucao = models.DateField()
 
     def __str__(self):
         return f"{self.leitor.nome} emprestou {self.livro.titulo}"
     
+class Devolucao(models.Model):
+    emprestimo = models.OneToOneField(Emprestimo, on_delete=models.CASCADE)
+    data_devolucao_real = models.DateField()
+    valor_multa = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    multa_paga = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Devolução de {self.emprestimo.livro.titulo}"

@@ -617,3 +617,130 @@ main {
 .btn-voltar-modal {
     background-color: #9b2c37;
 }
+
+/* TELA DE RESERVAS */
+.estoque-container {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.tabela-estoque {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-estoque thead th {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    text-align: left;
+}
+
+.tabela-estoque tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-estoque tbody tr:nth-child(even) {
+    background-color: #e9e9e9;
+}
+
+.botoes-acao {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-devolucao {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    background-color: #1C325B;
+}
+
+/* MODAL DE DEVOLUÇÃO */
+#modal-devolucao {
+    display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#modal-devolucao .modal-conteudo {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#modal-devolucao .fechar-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#modal-devolucao .modal-conteudo h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#modal-devolucao .form-group label {
+    font-weight: bold;
+    color: #555;
+}
+
+#modal-devolucao .form-group p {
+    background-color: #e9e9e9;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 5px;
+    height: auto;
+}
+
+#modal-devolucao .form-group input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#modal-devolucao .modal-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.btn-confirmar-modal {
+    background-color: #1C325B;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-voltar-modal {
+    background-color: #9b2c37;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

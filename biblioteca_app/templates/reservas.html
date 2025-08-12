@@ -38,6 +38,78 @@
     </nav>
 
     <main>
+        <div class="estoque-container">
+            <h2>Reservas</h2>
+            <table class="tabela-estoque">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Leitor</th>
+                        <th>Data Devolução</th>
+                        <th>Atrasado</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emprestimo in emprestimos %}
+                    <tr data-emprestimo-id="{{ emprestimo.id }}"
+                        data-emprestimo-data="{{ emprestimo.data_emprestimo|date:'Y-m-d' }}">
+                        <td>{{ emprestimo.livro.titulo }}</td>
+                        <td>{{ emprestimo.leitor.nome }}</td>
+                        <td>{{ emprestimo.data_devolucao|date:"d/m/Y" }}</td>
+                        <td>{% if emprestimo.atrasado %} Sim {% else %} Não {% endif %}</td>
+                        <td class="botoes-acao">
+                            <button class="btn-devolucao" data-emprestimo-id="{{ emprestimo.id }}">Devolução</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="modal-devolucao" class="modal">
+            <div class="modal-conteudo">
+                <span class="fechar-modal">&times;</span>
+                <h3>Devolução</h3>
+                <form id="form-devolucao" method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" id="emprestimo-id" name="emprestimo_id">
+                    <div class="form-group">
+                        <label>Título:</label>
+                        <p id="titulo-devolucao" class="info-adicional"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Leitor:</label>
+                        <p id="leitor-devolucao" class="info-adicional"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Data do empréstimo:</label>
+                        <p id="data-emprestimo-devolucao" class="info-adicional"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Data de devolução:</label>
+                        <p id="data-devolucao-prevista" class="info-adicional"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Atrasado:</label>
+                        <p id="atrasado-devolucao" class="info-adicional"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="data-entrega">Data de entrega:</label>
+                        <input type="date" id="data-entrega" name="data_entrega" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor da Multa:</label>
+                        <p id="valor-multa" class="info-adicional"></p>
+                        <input type="hidden" id="valor-multa-hidden" name="valor_multa">
+                    </div>
+                    <div class="modal-botoes">
+                        <button type="submit" class="btn btn-confirmar-modal">Confirmar</button>
+                        <button type="button" class="btn btn-voltar-modal">Voltar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </main>
 
     <script src="{% static 'script/script.js' %}"></script>
