@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from .models import Livro, Leitor, Emprestimo
 from django.utils import timezone
-
+from datetime import timedelta
 
 def home(request):
     livros = Livro.objects.all()
@@ -154,9 +154,9 @@ def livro_detalhes(request, livro_id):
     
     data_devolucao_proxima = None
     if not disponivel:
-        emprestimo_mais_proximo = Emprestimo.objects.filter(livro=livro, data_devolucao__isnull=True).order_by('data_devolucao').first()
-        if emprestimo_mais_proximo:
-            data_devolucao_proxima = emprestimo_mais_proximo.data_devolucao
+        emprestimo_mais_antigo = Emprestimo.objects.filter(livro=livro, data_devolucao__isnull=True).order_by('data_emprestimo').first()
+        if emprestimo_mais_antigo:
+            data_devolucao_proxima = emprestimo_mais_antigo.data_emprestimo + timedelta(days=15)
             
     context = {
         'livro': livro,
@@ -297,5 +297,36 @@ def buscar_livro_por_id(request):
         return JsonResponse(response_data)
     except Livro.DoesNotExist:
         return JsonResponse({'erro': 'Livro não encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'erro': str(e)}, status=500)
+    
+def buscar_livro_completo(request):
+    titulo = request.GET.get('titulo')
+    try:
+        livro = Livro.objects.filter(titulo__icontains=titulo).first() 
+        if not livro:
+            return JsonResponse({'erro': 'Livro não encontrado'}, status=404)
+        
+        emprestimos_ativos = Emprestimo.objects.filter(livro=livro, data_devolucao__isnull=True).count()
+        disponivel = (livro.quantidade - emprestimos_ativos) > 0
+
+        data_devolucao_proxima = None
+        if not disponivel:
+            emprestimo_mais_proximo = Emprestimo.objects.filter(livro=livro, data_devolucao__isnull=True).order_by('data_devolucao').first()
+            if emprestimo_mais_proximo and emprestimo_mais_proximo.data_devolucao:
+                data_devolucao_proxima = emprestimo_mais_proximo.data_devolucao.strftime("%d/%m/%Y")
+
+        response_data = {
+            'disponivel': disponivel,
+            'data_devolucao_proxima': data_devolucao_proxima,
+            'titulo': livro.titulo,
+            'autor': livro.autor,
+            'edicao': livro.edicao,
+            'numero_paginas': livro.numero_paginas,
+            'genero': livro.genero,
+            'classificacao': livro.classificacao,
+            'capa': livro.capa.url if livro.capa else None
+        }
+        return JsonResponse(response_data)
     except Exception as e:
         return JsonResponse({'erro': str(e)}, status=500)

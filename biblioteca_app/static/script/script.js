@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
             menu.classList.toggle('active');
         }
     }
-    window.toggleMenu = toggleMenu; 
-    
+    window.toggleMenu = toggleMenu;
+
     const cepInput = document.getElementById('cep');
     if (cepInput) {
         const enderecoInput = document.getElementById('endereco-edicao') || document.getElementById('endereco');
@@ -36,86 +36,101 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-const cpfInput = document.getElementById('cpf');
-if (cpfInput) {
-    const leitorNomeDisplay = document.getElementById('leitor-nome');
-    const multaInfoDisplay = document.getElementById('multa-info');
-    cpfInput.addEventListener('blur', () => {
-        const cpf = cpfInput.value.replace(/\D/g, '');
-        if (cpf.length === 11) {
-            fetch(`/api/leitor/buscar/?cpf=${cpf}`)
+    const cpfInput = document.getElementById('cpf');
+    if (cpfInput) {
+        const leitorNomeDisplay = document.getElementById('leitor-nome');
+        const multaInfoDisplay = document.getElementById('multa-info');
+        cpfInput.addEventListener('blur', () => {
+            const cpf = cpfInput.value.replace(/\D/g, '');
+            if (cpf.length === 11) {
+                fetch(`/api/leitor/buscar/?cpf=${cpf}`)
+                    .then(response => {
+                        // Verifica se a resposta do servidor foi bem-sucedida
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.erro);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        leitorNomeDisplay.innerText = data.nome;
+                        multaInfoDisplay.innerText = data.tem_multa ? 'Possui multa por atraso' : 'Não possui multas';
+                    })
+                    .catch(error => {
+                        leitorNomeDisplay.innerText = error.message;
+                        multaInfoDisplay.innerText = 'N/A';
+                        console.error('Erro:', error);
+                    });
+            } else {
+                leitorNomeDisplay.innerText = '';
+                multaInfoDisplay.innerText = '';
+            }
+        });
+    }
+
+const livroBuscaInput = document.getElementById('livro-busca');
+if (livroBuscaInput) {
+    const livroCapaDisplay = document.getElementById('livro-capa');
+    const livroTituloDisplay = document.getElementById('livro-titulo');
+    const livroAutorDisplay = document.getElementById('livro-autor');
+    const livroEdicaoDisplay = document.getElementById('livro-edicao');
+    const livroNumeroPaginasDisplay = document.getElementById('livro-numero_paginas');
+    const livroGeneroDisplay = document.getElementById('livro-genero');
+    const livroClassificacaoDisplay = document.getElementById('livro-classificacao');
+    const modalIndisponivel = document.getElementById('modal-livro-indisponivel');
+    const mensagemIndisponivel = document.getElementById('mensagem-indisponivel');
+    const fecharModalIndisponivel = modalIndisponivel.querySelector('.fechar-modal');
+    const voltarModalIndisponivel = modalIndisponivel.querySelector('.btn-voltar-modal');
+
+    fecharModalIndisponivel.addEventListener('click', () => { modalIndisponivel.style.display = 'none'; });
+    voltarModalIndisponivel.addEventListener('click', () => { modalIndisponivel.style.display = 'none'; });
+    window.addEventListener('click', (event) => {
+        if (event.target === modalIndisponivel) { modalIndisponivel.style.display = 'none'; }
+    });
+
+    livroBuscaInput.addEventListener('change', () => {
+        const tituloBusca = livroBuscaInput.value;
+        if (tituloBusca) {
+            fetch(`/api/livro/completo/?titulo=${encodeURIComponent(tituloBusca)}`)
                 .then(response => {
-                    // Verifica se a resposta do servidor foi bem-sucedida
                     if (!response.ok) {
-                        return response.json().then(errorData => {
-                            throw new Error(errorData.erro);
-                        });
+                        return response.json().then(errorData => { throw new Error(errorData.erro); });
                     }
                     return response.json();
                 })
                 .then(data => {
-                    leitorNomeDisplay.innerText = data.nome;
-                    multaInfoDisplay.innerText = data.tem_multa ? 'Possui multa por atraso' : 'Não possui multas';
+                    livroCapaDisplay.src = data.capa;
+                    livroCapaDisplay.style.display = 'block';
+                    livroTituloDisplay.innerText = data.titulo;
+                    livroAutorDisplay.innerText = data.autor;
+                    livroEdicaoDisplay.innerText = `Edição: ${data.edicao}`;
+                    livroNumeroPaginasDisplay.innerText = `Páginas: ${data.numero_paginas}`;
+                    livroGeneroDisplay.innerText = `Gênero: ${data.genero}`;
+                    livroClassificacaoDisplay.innerText = `Classificação: ${data.classificacao}`;
+
+                    if (!data.disponivel) {
+                        let mensagem = "Livro indisponível.";
+                        if (data.data_devolucao_proxima) {
+                            mensagem += ` Data mais próxima de devolução: ${data.data_devolucao_proxima}`;
+                        }
+                        mensagemIndisponivel.innerText = mensagem;
+                        modalIndisponivel.style.display = 'block';
+                    }
                 })
                 .catch(error => {
-                    leitorNomeDisplay.innerText = error.message;
-                    multaInfoDisplay.innerText = 'N/A';
-                    console.error('Erro:', error);
+                    alert(error.message);
+                    livroCapaDisplay.style.display = 'none';
+                    livroTituloDisplay.innerText = 'Livro não encontrado.';
+                    livroAutorDisplay.innerText = '';
+                    livroEdicaoDisplay.innerText = '';
+                    livroNumeroPaginasDisplay.innerText = '';
+                    livroGeneroDisplay.innerText = '';
+                    livroClassificacaoDisplay.innerText = '';
                 });
-        } else {
-            leitorNomeDisplay.innerText = '';
-            multaInfoDisplay.innerText = '';
         }
     });
 }
-
-    const livroBuscaInput = document.getElementById('livro-busca');
-    if (livroBuscaInput) {
-        const livroCapaDisplay = document.getElementById('livro-capa');
-        const livroTituloDisplay = document.getElementById('livro-titulo');
-        const livroAutorDisplay = document.getElementById('livro-autor');
-        const livroEdicaoDisplay = document.getElementById('livro-edicao');
-        const livroNumeroPaginasDisplay = document.getElementById('livro-numero_paginas');
-        const livroGeneroDisplay = document.getElementById('livro-genero');
-        const livroClassificacaoDisplay = document.getElementById('livro-classificacao');
-
-        livroBuscaInput.addEventListener('change', () => {
-            const tituloBusca = livroBuscaInput.value;
-            if (tituloBusca) {
-                fetch(`/api/livro/buscar/?titulo=${encodeURIComponent(tituloBusca)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.erro) {
-                            livroCapaDisplay.style.display = 'none';
-                            livroTituloDisplay.innerText = 'Livro não encontrado.';
-                            livroAutorDisplay.innerText = '';
-                            livroEdicaoDisplay.innerText = '';
-                            livroNumeroPaginasDisplay.innerText = '';
-                            livroGeneroDisplay.innerText = '';
-                            livroClassificacaoDisplay.innerText = '';
-                        } else {
-                            livroCapaDisplay.src = data.capa;
-                            livroCapaDisplay.style.display = 'block';
-                            livroTituloDisplay.innerText = data.titulo;
-                            livroAutorDisplay.innerText = data.autor;
-                            livroEdicaoDisplay.innerText = `Edição: ${data.edicao}`;
-                            livroNumeroPaginasDisplay.innerText = `Páginas: ${data.numero_paginas}`;
-                            livroGeneroDisplay.innerText = `Gênero: ${data.genero}`;
-                            livroClassificacaoDisplay.innerText = `Classificação: ${data.classificacao}`;
-                        }
-                    })
-                    .catch(() => {
-                        livroCapaDisplay.style.display = 'none';
-                        livroTituloDisplay.innerText = 'Erro ao buscar livro.';
-                        livroAutorDisplay.innerText = '';
-                        livroEdicaoDisplay.innerText = '';
-                        livroNumeroPaginasDisplay.innerText = '';
-                        livroGeneroDisplay.innerText = '';
-                        livroClassificacaoDisplay.innerText = '';
-                    });
-            }
-        });
-    }
 
     const limparBtn = document.querySelector('.btn-limpar');
     if (limparBtn) {
@@ -145,9 +160,9 @@ if (cpfInput) {
             botao.addEventListener('click', (event) => {
                 const linha = event.target.closest('tr');
                 const livroId = linha.dataset.livroId;
-                
+
                 formEdicaoLivro.action = `/editar_livro/${livroId}/`;
-                
+
                 fetch(`/api/livro/buscar_por_id/?id=${livroId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -161,7 +176,7 @@ if (cpfInput) {
                             document.getElementById('edicao-edicao').value = data.edicao;
                             document.getElementById('numero_paginas-edicao').value = data.numero_paginas;
                             document.getElementById('sinopse-edicao').value = data.sinopse;
-                            
+
                             const capaPreview = document.getElementById('capa-preview');
                             if (data.capa_url) {
                                 capaPreview.src = data.capa_url;
@@ -169,7 +184,7 @@ if (cpfInput) {
                             } else {
                                 capaPreview.style.display = 'none';
                             }
-                            
+
                             modalLivro.style.display = 'block';
                         } else {
                             alert(data.erro);
@@ -189,7 +204,7 @@ if (cpfInput) {
         });
     }
 
-    const modalLeitor = document.getElementById('modal-edicao-leitor'); 
+    const modalLeitor = document.getElementById('modal-edicao-leitor');
     if (modalLeitor) {
         const botoesEditarLeitor = document.querySelectorAll('.tabela-estoque .btn-editar');
         const fecharModalLeitor = modalLeitor.querySelector('.fechar-modal');
@@ -199,7 +214,7 @@ if (cpfInput) {
         botoesEditarLeitor.forEach(button => {
             button.addEventListener('click', function () {
                 const leitorId = this.dataset.leitorId;
-                
+
                 fetch(`/api/leitor/buscar_por_id/?id=${leitorId}`)
                     .then(response => response.json())
                     .then(data => {
@@ -212,9 +227,9 @@ if (cpfInput) {
                             document.getElementById('endereco-edicao').value = data.endereco;
                             document.getElementById('complemento-edicao').value = data.complemento;
                             document.getElementById('cidade-edicao').value = data.cidade;
-                            
+
                             formEdicaoLeitor.action = `/usuarios/editar/${leitorId}/`;
-                            
+
                             modalLeitor.style.display = 'block';
                         } else {
                             alert(data.erro);

@@ -25,6 +25,7 @@ urlpatterns = [
     path('usuarios/editar/<int:leitor_id>/', views.editar_leitor, name='editar_leitor'),
     path('usuarios/excluir/<int:leitor_id>/', views.excluir_leitor, name='excluir_leitor'),
     path('api/leitor/buscar_por_id/', views.buscar_leitor_por_id, name='buscar_leitor_por_id'),
+    path('api/livro/completo/', views.buscar_livro_completo, name='buscar_livro_completo'),
 ]
 
 if settings.DEBUG:
