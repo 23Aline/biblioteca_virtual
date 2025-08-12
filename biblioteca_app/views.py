@@ -174,7 +174,7 @@ def estoque(request):
     livros_cadastrados = Livro.objects.annotate(
         emprestados=Count('emprestimo', filter=Q(emprestimo__data_devolucao__isnull=True))
     ).annotate(
-        disponiveis=F('quantidade') - F('emprestados') # Novo: calcula os disponíveis
+        disponiveis=F('quantidade') - F('emprestados') 
     )
     context = {
         'livros': livros_cadastrados

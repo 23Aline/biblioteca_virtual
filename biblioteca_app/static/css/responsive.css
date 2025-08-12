@@ -4,11 +4,11 @@
     }
 
     .navbar a {
-        font-size: 22px; 
+        font-size: 22px;
     }
 
     .side-menu {
-        width: 200px; 
+        width: 200px;
         padding-top: 70px;
     }
 
@@ -17,7 +17,7 @@
     }
 
     .side-menu a {
-        font-size: 16px; 
+        font-size: 16px;
     }
 }
 
@@ -27,7 +27,7 @@
     }
 
     .navbar li {
-        display: block; 
+        display: block;
         margin: 10px 0;
     }
 
@@ -36,7 +36,7 @@
     }
 
     body {
-        padding-top: 130px; 
+        padding-top: 130px;
     }
 
     .side-menu {
@@ -57,11 +57,11 @@
 @media (max-width: 768px) {
     .container-form {
         max-width: 90%;
-        margin: 20px auto;
+        margin-top: -100px;
     }
 
     .form-grid {
-        grid-template-columns: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
     }
 
@@ -80,9 +80,9 @@
         max-width: 95%;
         padding: 15px;
     }
-    
+
     .form-grid {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
         gap: 10px;
     }
 
@@ -104,12 +104,14 @@
 /*TELA HOME*/
 @media (max-width: 768px) {
     .livros-grid {
-        grid-template-columns: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 1fr);
         gap: 15px;
+        margin-top: -100px;
     }
 
     .capa-container {
-        height: 250px; 
+        width: 250px;
+        height: 320px;
     }
 
     .livro-titulo {
@@ -123,16 +125,17 @@
 
 @media (max-width: 480px) {
     .livros-grid {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
         gap: 10px;
     }
 
     .capa-container {
-        height: 350px; 
+        width: 250px;
+        height: 320px;
     }
-    
+
     .livro-card {
-        margin: 0 auto; 
+        margin: 0 auto;
         max-width: 300px;
     }
 }
@@ -140,26 +143,26 @@
 /*TELA DE CADASTRO DE LEITOR*/
 @media (max-width: 768px) {
     .radio-group {
-        grid-column: 1 / span 2; 
+        grid-column: 1 / span 2;
     }
 
     .radio-options {
-        flex-direction: column; 
-        gap: 10px; 
+        flex-direction: column;
+        gap: 10px;
     }
 
     .radio-options label {
-        padding: 8px 12px; 
+        padding: 8px 12px;
     }
 }
 
 @media (max-width: 480px) {
     .radio-group {
-        grid-column: 1 / span 1; 
+        grid-column: 1 / span 1;
     }
 
     .radio-options label {
-        width: 100%; 
+        width: 93%;
         text-align: center;
     }
 }
@@ -167,80 +170,301 @@
 /*TELA DE EMPRESTIMO*/
 @media (max-width: 768px) {
     .emprestimo-content {
-        flex-direction: column; 
-        align-items: center; 
+        flex-direction: column;
+        align-items: center;
     }
 
     .emprestimo-info,
     .emprestimo-form-container {
         width: 100%;
-        max-width: 100%; 
+        max-width: 100%;
         height: auto;
-        padding: 20px;
+        padding: 10px;
     }
 
     .emprestimo-info {
-        background-color: #f2f2f2; 
-        margin-bottom: 20px; 
-        padding-top: 100px;
+        background-color: #f2f2f2;
+        margin-bottom: 20px;
+        padding-top: 10px;
     }
 
     .livro-info-text {
-        font-size: 18px; 
+        font-size: 18px;
+        margin-top: 10px;
     }
 
     .form-buttons {
-        flex-direction: column; 
-        gap: 10px; 
+        display: flex;
+        gap: 10px;
     }
 
     .btn-confirmar,
     .btn-limpar {
-        width: 100%; 
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
     .container-emprestimo {
-        padding: 15px; 
+        padding: 15px;
     }
 
     .container-emprestimo h2 {
-        font-size: 24px; 
+        font-size: 24px;
+        margin-top: -100px;
     }
-    
+
     .emprestimo-content {
         gap: 15px;
     }
 
     .emprestimo-info-container h3 {
-        font-size: 1rem; 
+        font-size: 1rem;
     }
-    
+
     #livro-capa {
-        max-width: 100px; 
+        max-width: 100px;
     }
 
     .livro-info-text {
-        font-size: 14px; 
+        font-size: 14px;
     }
 
     .form-group label {
         font-size: 14px;
     }
-    
+
     .form-group input,
     .form-group p.info-adicional {
         padding: 8px;
         font-size: 14px;
     }
-    
+
     .form-buttons {
-        gap: 8px; 
+        display: flex;
+        gap: 8px;
     }
 
-    .btn-confirmar, .btn-limpar {
+    .btn-confirmar,
+    .btn-limpar {
         padding: 10px;
         font-size: 12px;
+    }
+}
+
+/*TELA DE INFORMAÇÕES LIVROS*/
+@media (max-width: 768px) {
+    .livro-detalhes-container {
+        max-width: 95%; 
+        padding: 10px;
+        margin-top: -100px;
+    }
+
+    .livro-detalhes-grid {
+        flex-direction: column; 
+        align-items: center;
+        gap: 20px;
+    }
+
+    .livro-info-principal {
+        flex-shrink: 0; 
+    }
+
+    .capa-detalhes,
+    .capa-placeholder-detalhes {
+        width: 180px; 
+    }
+    
+    .status-tag {
+        margin-top: -10px; 
+    }
+    
+    .livro-dados-texto p {
+        text-align: center; 
+    }
+
+    .livro-sinopse {
+        flex: 1; 
+        text-align: center;
+        font-size: 20px;
+    }
+    
+    .livro-detalhes-botoes {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-voltar-detalhes, .btn-reservar-detalhes, .btn-esgotado {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .livro-detalhes-container {
+        padding: 15x;
+    }
+
+    .livro-detalhes-header h2 {
+        font-size: 25px; 
+    }
+
+    .capa-detalhes,
+    .capa-placeholder-detalhes {
+        width: 150px; 
+    }
+
+    .status-tag {
+        margin-top: -30px;
+        font-size: 15px;
+    }
+    
+    .livro-dados-texto p {
+        font-size: 20px;
+    }
+    
+    .livro-detalhes-botoes {
+        gap: 8px;
+    }
+    
+    .btn-voltar-detalhes, .btn-reservar-detalhes, .btn-esgotado {
+        padding: 8px 10px; 
+    }
+}
+
+/* TELA DE ESTOQUE E USUARIOS */
+@media (max-width: 768px) {
+    .estoque-container {
+        padding: 10px;
+        margin-top: -100px;
+    }
+
+    .tabela-estoque {
+        display: block;
+        width: 100%;
+        overflow-x: auto; 
+        white-space: nowrap;
+    }
+
+    .tabela-estoque thead th,
+    .tabela-estoque tbody td {
+        padding: 10px;
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .estoque-container {
+        padding: 5px;
+    }
+
+    .tabela-estoque {
+        border-collapse: collapse;
+        display: block; 
+        width: 100%;
+    }
+
+    .tabela-estoque thead {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .tabela-estoque thead tr {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        background-color: transparent;
+        color: black;
+    }
+
+    .tabela-estoque thead th {
+        background-color: transparent;
+        color: black;
+        border-bottom: none;
+        padding: 5px;
+    }
+    
+    .tabela-estoque tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .tabela-estoque tbody tr {
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+    }
+    
+    .tabela-estoque tbody td {
+        display: block;
+        text-align: left;
+        border: none;
+        padding: 5px;
+    }
+
+    .tabela-estoque tbody td::before {
+        display: none;
+    }
+
+    .botoes-acao {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        padding-top: 10px;
+        grid-column: 1 / span 2; 
+    }
+
+    .botoes-acao .btn-editar,
+    .botoes-acao .btn-excluir {
+        flex-grow: 1;
+        text-align: center;
+        box-sizing: border-box;
+    }
+}
+
+/* RESPONSIVIDADE PARA O MODAL */
+@media (max-width: 768px) {
+    .modal-conteudo {
+        width: 80%; 
+        margin: 10% auto; 
+        padding: 10px; 
+    }
+
+    .modal-conteudo h3 {
+        font-size: 15px;
+    }
+
+    .modal-botoes {
+        gap: 5px; 
+    }
+
+    .btn-salvar-modal, .btn-voltar-modal {
+        padding: 8px 15px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-conteudo {
+        width: 80%; 
+        margin: 30% auto;
+        padding: 10px;
+    }
+
+    .form-grid {
+        display: flex; 
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-botoes {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .btn-salvar-modal, .btn-voltar-modal {
+        width: 100%; 
+        padding: 10px;
     }
 }

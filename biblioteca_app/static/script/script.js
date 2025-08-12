@@ -1,14 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // --- Lógica do Menu Lateral ---
     function toggleMenu() {
         const menu = document.getElementById('side-menu');
         if (menu) {
             menu.classList.toggle('active');
         }
     }
-    window.toggleMenu = toggleMenu; // Torna a função acessível globalmente
+    window.toggleMenu = toggleMenu; 
     
-    // --- Lógica da tela de cadastro de leitor (busca de CEP) ---
     const cepInput = document.getElementById('cep');
     if (cepInput) {
         const enderecoInput = document.getElementById('endereco-edicao') || document.getElementById('endereco');
@@ -38,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Lógica da tela de empréstimo (busca de leitor e livro) ---
     const cpfInput = document.getElementById('cpf');
     if (cpfInput) {
         const leitorNomeDisplay = document.getElementById('leitor-nome');
@@ -116,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Lógica para o botão "Limpar" ---
     const limparBtn = document.querySelector('.btn-limpar');
     if (limparBtn) {
         limparBtn.addEventListener('click', () => {
@@ -134,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Lógica para a tela de estoque (modal de edição de livro) ---
     const modalLivro = document.getElementById('modal-edicao');
     if (modalLivro) {
         const botoesEditarLivro = document.querySelectorAll('.tabela-estoque .btn-editar');
@@ -190,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Lógica para a tela de usuários (modal de edição de leitor) ---
     const modalLeitor = document.getElementById('modal-edicao-leitor'); 
     if (modalLeitor) {
         const botoesEditarLeitor = document.querySelectorAll('.tabela-estoque .btn-editar');
