@@ -36,34 +36,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    const cpfInput = document.getElementById('cpf');
-    if (cpfInput) {
-        const leitorNomeDisplay = document.getElementById('leitor-nome');
-        const multaInfoDisplay = document.getElementById('multa-info');
-        cpfInput.addEventListener('blur', () => {
-            const cpf = cpfInput.value.replace(/\D/g, '');
-            if (cpf.length === 11) {
-                fetch(`/api/leitor/buscar/?cpf=${cpf}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.erro) {
-                            leitorNomeDisplay.innerText = data.erro;
-                            multaInfoDisplay.innerText = 'N/A';
-                        } else {
-                            leitorNomeDisplay.innerText = data.nome;
-                            multaInfoDisplay.innerText = data.tem_multa ? 'Possui multa por atraso' : 'Não possui multas';
-                        }
-                    })
-                    .catch(() => {
-                        leitorNomeDisplay.innerText = 'Erro ao buscar leitor.';
-                        multaInfoDisplay.innerText = 'N/A';
-                    });
-            } else {
-                leitorNomeDisplay.innerText = '';
-                multaInfoDisplay.innerText = '';
-            }
-        });
-    }
+const cpfInput = document.getElementById('cpf');
+if (cpfInput) {
+    const leitorNomeDisplay = document.getElementById('leitor-nome');
+    const multaInfoDisplay = document.getElementById('multa-info');
+    cpfInput.addEventListener('blur', () => {
+        const cpf = cpfInput.value.replace(/\D/g, '');
+        if (cpf.length === 11) {
+            fetch(`/api/leitor/buscar/?cpf=${cpf}`)
+                .then(response => {
+                    // Verifica se a resposta do servidor foi bem-sucedida
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.erro);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    leitorNomeDisplay.innerText = data.nome;
+                    multaInfoDisplay.innerText = data.tem_multa ? 'Possui multa por atraso' : 'Não possui multas';
+                })
+                .catch(error => {
+                    leitorNomeDisplay.innerText = error.message;
+                    multaInfoDisplay.innerText = 'N/A';
+                    console.error('Erro:', error);
+                });
+        } else {
+            leitorNomeDisplay.innerText = '';
+            multaInfoDisplay.innerText = '';
+        }
+    });
+}
 
     const livroBuscaInput = document.getElementById('livro-busca');
     if (livroBuscaInput) {

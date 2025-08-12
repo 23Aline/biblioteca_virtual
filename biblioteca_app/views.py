@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError 
 from django.contrib import messages
 from .models import Livro, Leitor, Emprestimo
+from django.utils import timezone
+
 
 def home(request):
     livros = Livro.objects.all()
@@ -99,9 +101,16 @@ def emprestimo(request):
 
 def buscar_leitor(request):
     cpf = request.GET.get('cpf')
+    if not cpf:
+        return JsonResponse({'erro': 'CPF não fornecido'}, status=400)
+        
+    cpf = cpf.strip() 
+
     try:
         leitor = Leitor.objects.get(cpf=cpf)
-        tem_multa = False 
+        
+        hoje = timezone.now().date()
+        tem_multa = Emprestimo.objects.filter(leitor=leitor, data_devolucao__lt=hoje, multa_paga=False).exists()
         
         response_data = {
             'nome': leitor.nome,
@@ -110,6 +119,8 @@ def buscar_leitor(request):
         return JsonResponse(response_data)
     except Leitor.DoesNotExist:
         return JsonResponse({'erro': 'Leitor não encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'erro': str(e)}, status=500)
 
 def buscar_livro(request):
     titulo = request.GET.get('titulo')

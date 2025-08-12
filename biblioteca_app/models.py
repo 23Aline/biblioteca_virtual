@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone 
 
 class Livro(models.Model):
     titulo = models.CharField(max_length=200)
@@ -17,18 +18,26 @@ class Livro(models.Model):
 class Leitor(models.Model):
     nome = models.CharField(max_length=200)
     data_nascimento = models.DateField()
-    celular = models.CharField(max_length=15)
+    celular = models.CharField(max_length=15, unique=True)
     cpf = models.CharField(max_length=14, unique=True)
     email = models.EmailField(unique=True)
     cep = models.CharField(max_length=9)
     endereco = models.CharField(max_length=255)
     complemento = models.CharField(max_length=100, blank=True, null=True)
     cidade = models.CharField(max_length=100)
-    recebimento_alertas = models.CharField(max_length=10, choices=[('email', 'Email'), ('celular', 'Celular')], default='email')
+    RECEBIMENTO_ALERTAS_CHOICES = [
+        ('email', 'Email'),
+        ('celular', 'Celular'),
+    ]
+    recebimento_alertas = models.CharField(max_length=10, choices=RECEBIMENTO_ALERTAS_CHOICES, default='email')
+
+    @property
+    def possui_multa(self):
+        hoje = timezone.now().date()
+        return Emprestimo.objects.filter(leitor=self, data_devolucao__lt=hoje, multa_paga=False).exists()
 
     def __str__(self):
         return self.nome
-    
 class Emprestimo(models.Model):
     leitor = models.ForeignKey(Leitor, on_delete=models.CASCADE)
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
@@ -39,21 +48,3 @@ class Emprestimo(models.Model):
     def __str__(self):
         return f"{self.leitor.nome} emprestou {self.livro.titulo}"
     
-class Leitores(models.Model):
-    nome = models.CharField(max_length=200)
-    data_nascimento = models.DateField()
-    celular = models.CharField(max_length=15, unique=True)
-    cpf = models.CharField(max_length=14, unique=True)
-    email = models.EmailField(unique=True)
-    cep = models.CharField(max_length=9)
-    endereco = models.CharField(max_length=255)
-    complemento = models.CharField(max_length=100, blank=True, null=True)
-    cidade = models.CharField(max_length=100)
-    recebimento_alertas = models.BooleanField(default=True)
-
-    @property
-    def possui_multa(self):
-        return Emprestimo.objects.filter(leitor=self, multa_paga=False).exists()
-
-    def __str__(self):
-        return self.nome
