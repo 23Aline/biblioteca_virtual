@@ -9,6 +9,8 @@ from django.utils import timezone
 from datetime import timedelta, date, datetime
 import decimal 
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
+from .models import Livro
 
 def multa(request):
     return render(request, 'multa.html')
@@ -136,45 +138,52 @@ def emprestimo(request):
         data_emprestimo_str = request.POST.get('data_emprestimo')
         data_devolucao_str = request.POST.get('data_devolucao')
 
-        try:
-            leitor = get_object_or_404(Leitor, cpf=cpf)
-            livro = get_object_or_404(Livro, titulo=titulo_livro)
-            emprestimos_ativos = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).count()
-            
-            if emprestimos_ativos >= livro.quantidade:
-                return JsonResponse({
-                    'sucesso': False, 
-                    'mensagem': "Não há cópias disponíveis deste livro."
-                }, status=400)
+        # Verifica se CPF e Livro foram enviados
+        if not cpf or not titulo_livro:
+            return JsonResponse({
+                'sucesso': False,
+                'mensagem': "CPF e título do livro são obrigatórios."
+            }, status=400)
 
+        # Busca o leitor e o livro
+        leitor = get_object_or_404(Leitor, cpf=cpf)
+        livro = get_object_or_404(Livro, titulo=titulo_livro)
+
+        # Verifica disponibilidade do livro
+        emprestimos_ativos = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).count()
+        if emprestimos_ativos >= livro.quantidade:
+            return JsonResponse({
+                'sucesso': False,
+                'mensagem': "Não há cópias disponíveis deste livro."
+            }, status=400)
+
+        # Validar e converter datas
+        try:
             data_emprestimo_obj = datetime.strptime(data_emprestimo_str, '%Y-%m-%d').date()
             data_devolucao_obj = datetime.strptime(data_devolucao_str, '%Y-%m-%d').date()
-
-            novo_emprestimo = Emprestimo(
-                leitor=leitor,
-                livro=livro,
-                data_emprestimo=data_emprestimo_obj,
-                data_devolucao=data_devolucao_obj,
-            )
-            novo_emprestimo.save()
-            return JsonResponse({
-                'sucesso': True, 
-                'mensagem': f"Empréstimo de '{livro.titulo}' para '{leitor.nome}' registrado com sucesso."
-            })
-        except (Leitor.DoesNotExist, Livro.DoesNotExist):
-            return JsonResponse({
-                'sucesso': False, 
-                'mensagem': "Leitor ou Livro não encontrados."
-            }, status=400)
         except ValueError:
             return JsonResponse({
-                'sucesso': False, 
+                'sucesso': False,
                 'mensagem': "Formato de data inválido. Use AAAA-MM-DD."
             }, status=400)
 
+       
+        novo_emprestimo = Emprestimo(
+            leitor=leitor,
+            livro=livro,
+            data_emprestimo=data_emprestimo_obj,
+            data_devolucao=data_devolucao_obj
+        )
+        novo_emprestimo.save()
+
+        return JsonResponse({
+            'sucesso': True,
+            'mensagem': f"Empréstimo de '{livro.titulo}' para '{leitor.nome}' registrado com sucesso."
+        })
+
+    
     livros_cadastrados = Livro.objects.all()
-    context = {'livros': livros_cadastrados}
-    return render(request, 'emprestimo.html', context)
+    return render(request, 'emprestimo.html', {'livros': livros_cadastrados})
 
 def emprestimo_com_livro(request, livro_id):
     livro = get_object_or_404(Livro, pk=livro_id)

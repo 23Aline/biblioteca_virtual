@@ -1,15 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        crossorigin="anonymous" />
-    <title>Emprestimo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" />
+    <title>Empréstimo</title>
 </head>
 
 <body>
@@ -55,6 +54,7 @@
                         <p id="livro-classificacao" class="livro-info-text"></p>
                     </div>
                 </div>
+
                 <div class="emprestimo-form-container">
                     <form id="form-emprestimo" method="post" action="{% url 'emprestimo' %}">
                         {% csrf_token %}
@@ -72,12 +72,11 @@
                         </div>
                         <div class="form-group">
                             <label for="livro">Livro</label>
-                            <input list="lista-livros" id="livro-busca" name="livro" placeholder="Digite ou selecione"
-                                required>
+                            <input list="lista-livros" id="livro-busca" name="livro" placeholder="Digite ou selecione" required>
                             <datalist id="lista-livros">
                                 {% for livro in livros %}
-                                <option value="{{ livro.titulo }}">
-                                    {% endfor %}
+                                    <option value="{{ livro.titulo }}"></option>
+                                {% endfor %}
                             </datalist>
                         </div>
                         <div class="form-group">
@@ -90,48 +89,57 @@
                         </div>
                         <div class="form-buttons">
                             <button type="submit" class="btn btn-confirmar">Confirmar</button>
-                            <button type="button" class="btn btn-limpar">Limpar</button>
+                            <button type="button" class="btn btn-limpar" onclick="document.getElementById('form-emprestimo').reset()">Limpar</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div id="modal-livro-indisponivel" class="modal">
+        <!-- Modal de livro indisponível -->
+        <div id="modal-livro-indisponivel" class="modal" style="display:none;">
             <div class="modal-conteudo">
-                <span class="fechar-modal">&times;</span>
+                <span class="fechar-modal" onclick="fecharModalErro()">&times;</span>
                 <h3>Livro Indisponível</h3>
                 <p id="mensagem-indisponivel"></p>
                 <div class="modal-botoes">
-                    <button type="button" class="btn btn-voltar-modal">Voltar</button>
+                    <button type="button" class="btn btn-voltar-modal" onclick="fecharModalErro()">Voltar</button>
                 </div>
             </div>
         </div>
 
-        <div id="modal-sucesso" class="modal">
+        <!-- Modal de sucesso -->
+        <div id="modal-sucesso" class="modal" style="display:none;">
             <div class="modal-conteudo">
-                <span class="fechar-modal-sucesso">&times;</span>
+                <span class="fechar-modal-sucesso" onclick="fecharModalSucesso()">&times;</span>
                 <h3>Empréstimo realizado com sucesso!</h3>
                 <p id="mensagem-sucesso"></p>
                 <div class="modal-botoes">
-                    <button type="button" class="btn btn-fechar-modal-sucesso">Fechar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-erro" class="modal">
-            <div class="modal-conteudo">
-                <span class="fechar-modal-erro">&times;</span>
-                <h3>Erro no Empréstimo</h3>
-                <p id="mensagem-erro"></p>
-                <div class="modal-botoes">
-                    <button type="button" class="btn btn-fechar-modal-erro">Fechar</button>
+                    <button type="button" class="btn btn-fechar-modal-sucesso" onclick="fecharModalSucesso()">Fechar</button>
                 </div>
             </div>
         </div>
     </main>
 
     <script src="{% static 'script/script.js' %}"></script>
-</body>
+    <script>
+        function abrirModalErro(msg) {
+            document.getElementById('mensagem-indisponivel').innerText = msg;
+            document.getElementById('modal-livro-indisponivel').style.display = 'block';
+        }
 
-</html>
+        function fecharModalErro() {
+            document.getElementById('modal-livro-indisponivel').style.display = 'none';
+        }
+
+        function abrirModalSucesso(msg) {
+            document.getElementById('mensagem-sucesso').innerText = msg;
+            document.getElementById('modal-sucesso').style.display = 'block';
+        }
+
+        function fecharModalSucesso() {
+            document.getElementById('modal-sucesso').style.display = 'none';
+        }
+
+      
+    </script>

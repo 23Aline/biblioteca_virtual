@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="buscador.css">
     <title>Acervo Digital</title>
+   
+
 </head>
 
 <body>
@@ -23,6 +26,18 @@
                 <i class="fa fa-bars"></i>
             </button>
         </div>
+
+
+        <!--barra de pesquisa -->
+                <div class="buscador">
+            <form action="{% url 'home' %}" method="GET" class="pesquisa">
+                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Qual livro procura?" id="buscar">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+    </header>
+
+        
     </header>
 
     <nav id="side-menu" class="side-menu">
