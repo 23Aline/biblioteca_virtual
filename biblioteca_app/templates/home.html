@@ -1,46 +1,35 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acervo Digital</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        crossorigin="anonymous" />
-    <link rel="stylesheet" type="text/css" href="buscador.css">
-    <title>Acervo Digital</title>
-   
-
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" />
+    </head>
 
 <body>
     <header>
         <div class="navbar">
-        <a href="{% url 'home' %}" class="w3-xlarge">
-            <img src="{% static 'img/logo.png' %}" alt="Logo Acervo Digital" class="logo">
-            Acervo Digital
-        </a>
+            <a href="{% url 'home' %}" class="w3-xlarge">
+                <img src="{% static 'img/logo.png' %}" alt="Logo Acervo Digital" class="logo">
+                Acervo Digital
+            </a>
             <button class="menu-toggle" onclick="toggleMenu()">
                 <i class="fa fa-bars"></i>
             </button>
         </div>
 
-
-        <!--barra de pesquisa -->
-                <div class="buscador">
+        <div class="buscador">
             <form action="{% url 'home' %}" method="GET" class="pesquisa">
-                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Qual livro procura?" id="buscar">
+                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar por título, autor ou gênero..." id="buscar">
                 <button type="submit"><i class="fa fa-search"></i></button>
             </form>
         </div>
-    </header>
-
-        
-    </header>
-
-    <nav id="side-menu" class="side-menu">
+    </header> <nav id="side-menu" class="side-menu">
         <ul>
             <li><a href="{% url 'cadastro_livros' %}">Cadastro de Livros</a></li>
             <li><a href="{% url 'cadastro_leitor' %}">Cadastro de Leitor</a></li>
@@ -59,7 +48,7 @@
                 <article>
                     <div class="capa-container">
                         {% if livro.capa %}
-                        <img src="{{ livro.capa.url }}" alt="Capa do livro">
+                        <img src="{{ livro.capa.url }}" alt="Capa do livro {{ livro.titulo }}">
                         {% else %}
                         <div class="capa-placeholder"></div>
                         {% endif %}
@@ -70,6 +59,8 @@
                     </div>
                 </article>
             </a>
+            {% empty %}
+            <p>Nenhum livro encontrado com o termo "{{ request.GET.q }}".</p>
             {% endfor %}
         </div>
     </main>
