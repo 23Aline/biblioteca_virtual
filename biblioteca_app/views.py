@@ -8,6 +8,7 @@ from .models import Livro, Leitor, Emprestimo, Devolucao
 from django.utils import timezone
 from datetime import timedelta, date, datetime
 import decimal 
+from django.views.decorators.csrf import csrf_exempt
 
 def multa(request):
     return render(request, 'multa.html')
@@ -125,62 +126,84 @@ def cadastro_leitor(request):
     
     return render(request, 'cadastro_leitor.html')
 
+
+
+@csrf_exempt
 def emprestimo(request):
-    leitores = Leitor.objects.all()
-    livros_disponiveis = Livro.objects.filter(quantidade__gt=0)
-    context = {
-        'leitores': leitores,
-        'livros': livros_disponiveis
-    }
-    
     if request.method == 'POST':
-        cpf_leitor = request.POST.get('cpf')
-        livro_id = request.POST.get('livro')
+        cpf = request.POST.get('cpf')
+        titulo_livro = request.POST.get('livro')
         data_emprestimo_str = request.POST.get('data_emprestimo')
         data_devolucao_str = request.POST.get('data_devolucao')
 
         try:
-            leitor = Leitor.objects.get(cpf=cpf_leitor)
-            livro = Livro.objects.get(pk=livro_id)
+            leitor = get_object_or_404(Leitor, cpf=cpf)
+            livro = get_object_or_404(Livro, titulo=titulo_livro)
+            emprestimos_ativos = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).count()
             
-            data_emprestimo = datetime.strptime(data_emprestimo_str, '%d/%m/%Y').strftime('%Y-%m-%d')
-            data_devolucao = datetime.strptime(data_devolucao_str, '%d/%m/%Y').strftime('%Y-%m-%d')
-            
-            Emprestimo.objects.create(
+            if emprestimos_ativos >= livro.quantidade:
+                return JsonResponse({
+                    'sucesso': False, 
+                    'mensagem': "Não há cópias disponíveis deste livro."
+                }, status=400)
+
+            data_emprestimo_obj = datetime.strptime(data_emprestimo_str, '%Y-%m-%d').date()
+            data_devolucao_obj = datetime.strptime(data_devolucao_str, '%Y-%m-%d').date()
+
+            novo_emprestimo = Emprestimo(
                 leitor=leitor,
                 livro=livro,
-                data_emprestimo=data_emprestimo,
-                data_devolucao=data_devolucao
+                data_emprestimo=data_emprestimo_obj,
+                data_devolucao=data_devolucao_obj,
             )
-            
-            livro.quantidade -= 1
-            livro.save()
-
-            return redirect('reservas')
-
-        except Leitor.DoesNotExist:
-            context['erro'] = "Leitor não encontrado."
-        except Livro.DoesNotExist:
-            context['erro'] = "Livro não encontrado."
+            novo_emprestimo.save()
+            return JsonResponse({
+                'sucesso': True, 
+                'mensagem': f"Empréstimo de '{livro.titulo}' para '{leitor.nome}' registrado com sucesso."
+            })
+        except (Leitor.DoesNotExist, Livro.DoesNotExist):
+            return JsonResponse({
+                'sucesso': False, 
+                'mensagem': "Leitor ou Livro não encontrados."
+            }, status=400)
         except ValueError:
-            context['erro'] = "Formato de data inválido. Use dd/mm/aaaa."
-        
-        return render(request, 'emprestimo.html', context)
+            return JsonResponse({
+                'sucesso': False, 
+                'mensagem': "Formato de data inválido. Use AAAA-MM-DD."
+            }, status=400)
 
+    livros_cadastrados = Livro.objects.all()
+    context = {'livros': livros_cadastrados}
+    return render(request, 'emprestimo.html', context)
+
+def emprestimo_com_livro(request, livro_id):
+    livro = get_object_or_404(Livro, pk=livro_id)
+    livros_cadastrados = Livro.objects.all()
+    
+    emprestimos_ativos = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).count()
+    disponivel = (livro.quantidade - emprestimos_ativos) > 0
+
+    if not disponivel:
+        return redirect('livro_detalhes', livro_id=livro.id) 
+
+    context = {
+        'livro_pre_selecionado': livro,
+        'livros': livros_cadastrados
+    }
     return render(request, 'emprestimo.html', context)
 
 def buscar_leitor(request):
     cpf = request.GET.get('cpf')
     if not cpf:
         return JsonResponse({'erro': 'CPF não fornecido'}, status=400)
-        
+    
     cpf = cpf.strip() 
 
     try:
         leitor = Leitor.objects.get(cpf=cpf)
         
-        hoje = timezone.now().date()
-        tem_multa = Emprestimo.objects.filter(leitor=leitor, data_devolucao__lt=hoje, multa_paga=False).exists()
+        hoje = date.today()
+        tem_multa = Emprestimo.objects.filter(leitor=leitor, devolucao__isnull=True, data_devolucao__lt=hoje).exists()
         
         response_data = {
             'nome': leitor.nome,
@@ -234,22 +257,6 @@ def livro_detalhes(request, livro_id):
         'data_devolucao_proxima': data_devolucao_proxima
     }
     return render(request, 'livro_detalhes.html', context)
-
-def emprestimo_com_livro(request, livro_id):
-    livro = get_object_or_404(Livro, pk=livro_id)
-    livros_cadastrados = Livro.objects.all()
-    
-    emprestimos_ativos = Emprestimo.objects.filter(livro=livro, data_devolucao__isnull=True).count()
-    disponivel = (livro.quantidade - emprestimos_ativos) > 0
-
-    if not disponivel:
-        return redirect('livro_detalhes', livro_id=livro.id) 
-
-    context = {
-        'livro_pre_selecionado': livro,
-        'livros': livros_cadastrados
-    }
-    return render(request, 'emprestimo.html', context)
 
 def estoque(request):
     livros_cadastrados = Livro.objects.annotate(

@@ -34,7 +34,7 @@ class Leitor(models.Model):
     @property
     def possui_multa(self):
         hoje = timezone.now().date()
-        return Emprestimo.objects.filter(leitor=self, data_devolucao__lt=hoje, multa_paga=False).exists()
+        return Emprestimo.objects.filter(leitor=self, data_devolucao__lt=hoje, devolucao__isnull=True).exists()
 
     def __str__(self):
         return self.nome

@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (cpf.length === 11) {
                 fetch(`/api/leitor/buscar/?cpf=${cpf}`)
                     .then(response => {
-                        // Verifica se a resposta do servidor foi bem-sucedida
                         if (!response.ok) {
                             return response.json().then(errorData => {
                                 throw new Error(errorData.erro);
@@ -316,4 +315,53 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+const formEmprestimo = document.getElementById('form-emprestimo');
+if (formEmprestimo) {
+    const modalSucesso = document.getElementById('modal-sucesso');
+    const modalErro = document.getElementById('modal-erro');
+    const mensagemSucesso = document.getElementById('mensagem-sucesso');
+    const mensagemErro = document.getElementById('mensagem-erro');
+    
+    document.querySelectorAll('.fechar-modal-sucesso, .btn-fechar-modal-sucesso').forEach(btn => {
+        btn.addEventListener('click', () => { modalSucesso.style.display = 'none'; });
+    });
+    document.querySelectorAll('.fechar-modal-erro, .btn-fechar-modal-erro').forEach(btn => {
+        btn.addEventListener('click', () => { modalErro.style.display = 'none'; });
+    });
+    
+    formEmprestimo.addEventListener('submit', function (e) {
+        e.preventDefault(); 
+
+        const formData = new FormData(formEmprestimo);
+        
+        fetch("{% url 'emprestimo' %}", {
+            method: "POST",
+            body: formData,
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.sucesso) {
+                mensagemSucesso.innerText = data.mensagem;
+                modalSucesso.style.display = 'block';
+                formEmprestimo.reset();
+            } else {
+                mensagemErro.innerText = data.mensagem;
+                modalErro.style.display = 'block';
+            }
+        })
+        .catch(() => {
+            mensagemErro.innerText = "Ocorreu um erro inesperado na comunicação com o servidor.";
+            modalErro.style.display = 'block';
+        });
+    });
+}
+
+    document.querySelectorAll('.fechar-modal, .btn-voltar-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        });
+    });
+
 });
