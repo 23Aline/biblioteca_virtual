@@ -1,4 +1,3 @@
-# Imports organizados e limpos
 from django.db.models import Q, Count, F
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,11 +10,9 @@ import decimal
 from django.views.decorators.http import require_POST 
 from django.views.decorators.csrf import csrf_exempt
 
-
-
 def home(request):
     
-    query = request.GET.get('q') # Pega o parâmetro 'q' da URL (ex: /?q=Aventura)
+    query = request.GET.get('q')
     
     if query:
         
@@ -25,7 +22,6 @@ def home(request):
             Q(genero__icontains=query)  
         ).distinct() 
     else:
-        # Se não houver busca, retorna todos os livros
         livros = Livro.objects.all()
     
     context = {
@@ -36,17 +32,15 @@ def home(request):
 def livro_detalhes(request, livro_id):
     livro = get_object_or_404(Livro, pk=livro_id)
     
-    # <-- CORREÇÃO: A forma correta de verificar empréstimos ativos é checando se existe uma devolução associada
     emprestimos_ativos = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).count()
     disponivel = (livro.quantidade - emprestimos_ativos) > 0
     
     data_devolucao_proxima = None
     if not disponivel:
-        # <-- CORREÇÃO: Filtrando corretamente e pegando a data de devolução prevista do empréstimo
-        emprestimo_mais_proximo = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).order_by('data_devolucao').first()
-        if emprestimo_mais_proximo:
-            data_devolucao_proxima = emprestimo_mais_proximo.data_devolucao
-            
+        emprestimos_pendentes = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).order_by('data_devolucao')
+        if emprestimos_pendentes.exists():
+            data_devolucao_proxima = emprestimos_pendentes.first().data_devolucao
+    
     context = {
         'livro': livro,
         'disponivel': disponivel,
@@ -54,12 +48,8 @@ def livro_detalhes(request, livro_id):
     }
     return render(request, 'livro_detalhes.html', context)
 
-
-# ========= VIEWS DE CADASTRO E EDIÇÃO DE LIVROS =========
-
 def cadastro_livros(request):
     if request.method == 'POST':
-        # Esta forma de salvar é mais sucinta, mas a sua também funciona bem
         Livro.objects.create(
             titulo=request.POST.get('titulo'),
             autor=request.POST.get('autor'),
@@ -69,7 +59,7 @@ def cadastro_livros(request):
             classificacao=request.POST.get('classificacao'),
             quantidade=request.POST.get('quantidade'),
             sinopse=request.POST.get('sinopse'),
-            capa=request.FILES.get('capa') # Usar .get() é mais seguro que []
+            capa=request.FILES.get('capa') 
         )
         messages.success(request, 'Livro cadastrado com sucesso!')
         return redirect('home')
@@ -98,10 +88,9 @@ def editar_livro(request, livro_id):
         messages.success(request, f'O livro "{livro.titulo}" foi atualizado.')
         return redirect('estoque')
     
-    # <-- MELHORIA: Redireciona se o método não for POST
     return redirect('estoque')
 
-@require_POST # <-- MELHORIA DE SEGURANÇA: Garante que a exclusão só ocorra via POST
+@require_POST
 def excluir_livro(request, livro_id):
     livro = get_object_or_404(Livro, pk=livro_id)
     try:
@@ -114,7 +103,6 @@ def excluir_livro(request, livro_id):
     return redirect('estoque')
 
 def estoque(request):
-    # <-- CORREÇÃO: Usando 'emprestimo__devolucao__isnull' para contar corretamente os emprestados
     livros_cadastrados = Livro.objects.annotate(
         emprestados=Count('emprestimo', filter=Q(emprestimo__devolucao__isnull=True))
     ).annotate(
@@ -124,9 +112,6 @@ def estoque(request):
         'livros': livros_cadastrados
     }
     return render(request, 'estoque.html', context)
-
-
-# ========= VIEWS DE CADASTRO E EDIÇÃO DE LEITORES =========
 
 def cadastro_leitor(request):
     if request.method == 'POST':
@@ -140,7 +125,6 @@ def cadastro_leitor(request):
         novo_leitor.endereco = request.POST.get('endereco')
         novo_leitor.complemento = request.POST.get('complemento')
         novo_leitor.cidade = request.POST.get('cidade')
-        # <-- CORREÇÃO: Checkbox deve ser verificado pela presença da chave no POST
         novo_leitor.recebimento_alertas = 'recebimento_alertas' in request.POST
         novo_leitor.save()
         
@@ -163,10 +147,9 @@ def editar_leitor(request, leitor_id):
         messages.success(request, f'Dados de "{leitor.nome}" atualizados.')
         return redirect('usuarios')
     
-    # <-- MELHORIA: Em vez de erro, redireciona se o método for GET
     return redirect('usuarios')
 
-@require_POST # <-- MELHORIA DE SEGURANÇA: Garante que a exclusão só ocorra via POST
+@require_POST 
 def excluir_leitor(request, leitor_id):
     leitor = get_object_or_404(Leitor, pk=leitor_id)
     try:
@@ -184,9 +167,6 @@ def usuarios(request):
     }
     return render(request, 'usuarios.html', context)
 
-
-
-@csrf_exempt
 def emprestimo(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')
@@ -195,23 +175,30 @@ def emprestimo(request):
         data_devolucao_str = request.POST.get('data_devolucao')
 
         if not all([cpf, titulo_livro, data_emprestimo_str, data_devolucao_str]):
-            return JsonResponse({'sucesso': False, 'mensagem': "Todos os campos são obrigatórios."}, status=400)
+            messages.error(request, "Todos os campos são obrigatórios.", extra_tags="erro")
+            return redirect('emprestimo')
 
         try:
             leitor = Leitor.objects.get(cpf=cpf)
             livro = Livro.objects.get(titulo=titulo_livro)
-        except (Leitor.DoesNotExist, Livro.DoesNotExist):
-            return JsonResponse({'sucesso': False, 'mensagem': "Leitor ou Livro não encontrado."}, status=404)
+        except Leitor.DoesNotExist:
+            messages.error(request, "Leitor não encontrado.", extra_tags="erro")
+            return redirect('emprestimo')
+        except Livro.DoesNotExist:
+            messages.error(request, "Livro não encontrado.", extra_tags="erro")
+            return redirect('emprestimo')
 
         emprestimos_ativos = Emprestimo.objects.filter(livro=livro, devolucao__isnull=True).count()
         if emprestimos_ativos >= livro.quantidade:
-            return JsonResponse({'sucesso': False, 'mensagem': "Não há cópias disponíveis deste livro."}, status=400)
+            messages.error(request, "Não há cópias disponíveis deste livro.", extra_tags="erro")
+            return redirect('emprestimo')
 
         try:
             data_emprestimo_obj = datetime.strptime(data_emprestimo_str, '%Y-%m-%d').date()
             data_devolucao_obj = datetime.strptime(data_devolucao_str, '%Y-%m-%d').date()
         except ValueError:
-            return JsonResponse({'sucesso': False, 'mensagem': "Formato de data inválido. Use AAAA-MM-DD."}, status=400)
+            messages.error(request, "Formato de data inválido.", extra_tags="erro")
+            return redirect('emprestimo')
 
         Emprestimo.objects.create(
             leitor=leitor,
@@ -219,9 +206,11 @@ def emprestimo(request):
             data_emprestimo=data_emprestimo_obj,
             data_devolucao=data_devolucao_obj
         )
-        return JsonResponse({'sucesso': True, 'mensagem': "Empréstimo registrado com sucesso."})
 
-    livros_cadastrados = Livro.objects.filter(quantidade__gt=0) # <-- MELHORIA: Mostra apenas livros que têm estoque
+        messages.success(request, "Empréstimo registrado com sucesso.", extra_tags="sucesso")
+        return redirect('emprestimo')
+
+    livros_cadastrados = Livro.objects.filter(quantidade__gt=0)
     return render(request, 'emprestimo.html', {'livros': livros_cadastrados})
 
 def emprestimo_com_livro(request, livro_id):
@@ -274,19 +263,14 @@ def devolver_livro(request, emprestimo_id):
             return redirect('multa')
         else:
             return redirect('reservas')
-    # <-- CORREÇÃO: Removido redirect redundante
     return redirect('reservas')
 
 def multa(request):
-    # <-- MELHORIA: Passa para o template as devoluções que tiveram multa
     devolucoes_com_multa = Devolucao.objects.filter(valor_multa__gt=0).order_by('-data_devolucao_real')
     context = {
         'devolucoes': devolucoes_com_multa
     }
     return render(request, 'multa.html', context)
-
-
-# ========= VIEWS AJAX (PARA BUSCAS DINÂMICAS) =========
 
 def calcular_multa(request):
     emprestimo_id = request.GET.get('emprestimo_id')
@@ -302,7 +286,7 @@ def calcular_multa(request):
         if data_entrega > emprestimo.data_devolucao:
             atraso = True
             dias_atraso = (data_entrega - emprestimo.data_devolucao).days
-            valor_multa = decimal.Decimal(dias_atraso * 2.50) # <-- CORREÇÃO: Usar Decimal para precisão
+            valor_multa = decimal.Decimal(dias_atraso * 2.50) 
         
         return JsonResponse({'valor_multa': f'{valor_multa:.2f}', 'atraso': atraso})
     except Emprestimo.DoesNotExist:
@@ -324,8 +308,6 @@ def buscar_leitor(request):
         return JsonResponse({'nome': leitor.nome, 'tem_multa': tem_multa})
     except Leitor.DoesNotExist:
         return JsonResponse({'erro': 'Leitor não encontrado'}, status=404)
-
-
 
 def buscar_livro(request):
     titulo = request.GET.get('titulo')

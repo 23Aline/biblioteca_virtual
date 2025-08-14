@@ -53,7 +53,16 @@
                 </thead>
                 <tbody>
                     {% for livro in livros %}
-                    <tr data-livro-id="{{ livro.id }}" data-livro-titulo="{{ livro.titulo }}">
+                    <tr data-livro-id="{{ livro.id }}" 
+                        data-livro-titulo="{{ livro.titulo }}"
+                        data-autor="{{ livro.autor }}" 
+                        data-genero="{{ livro.genero }}" 
+                        data-edicao="{{ livro.edicao }}"
+                        data-numero-paginas="{{ livro.numero_paginas }}" 
+                        data-classificacao="{{ livro.classificacao }}"
+                        data-sinopse="{{ livro.sinopse }}" 
+                        data-quantidade="{{ livro.quantidade }}"
+                        data-capa="{% if livro.capa %}{{ livro.capa.url }}{% endif %}">
                         <td>{{ livro.titulo }}</td>
                         <td>{{ livro.autor }}</td>
                         <td>{{ livro.quantidade }}</td>
@@ -64,6 +73,7 @@
                             <a href="{% url 'excluir_livro' livro.id %}" class="btn-excluir">Excluir</a>
                         </td>
                     </tr>
+
                     {% endfor %}
                 </tbody>
             </table>

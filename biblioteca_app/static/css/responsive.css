@@ -106,7 +106,7 @@
     .livros-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
-        margin-top: -100px;
+        margin-top: -60px;
     }
 
     .capa-container {
@@ -137,6 +137,32 @@
     .livro-card {
         margin: 0 auto;
         max-width: 300px;
+    }
+}
+
+/* BUSCADOR */
+@media (max-width: 768px) {
+    .buscador {
+        top: 80px;
+        padding: 10px;
+        margin-top: 30px;
+        z-index: 100; 
+    }
+
+    .pesquisa {
+        flex-direction: row;
+        gap: 10px;
+        max-width: 90%;
+    }
+
+    #buscar {
+        padding: 12px 35px;
+    }
+
+    .pesquisa button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 25px;
     }
 }
 
@@ -255,46 +281,48 @@
 /*TELA DE INFORMAÇÕES LIVROS*/
 @media (max-width: 768px) {
     .livro-detalhes-container {
-        max-width: 95%; 
+        max-width: 95%;
         padding: 10px;
         margin-top: -100px;
     }
 
     .livro-detalhes-grid {
-        flex-direction: column; 
+        flex-direction: column;
         align-items: center;
         gap: 20px;
     }
 
     .livro-info-principal {
-        flex-shrink: 0; 
+        flex-shrink: 0;
     }
 
     .capa-detalhes,
     .capa-placeholder-detalhes {
-        width: 180px; 
+        width: 180px;
     }
-    
+
     .status-tag {
-        margin-top: -10px; 
+        margin-top: -10px;
     }
-    
+
     .livro-dados-texto p {
-        text-align: center; 
+        text-align: center;
     }
 
     .livro-sinopse {
-        flex: 1; 
+        flex: 1;
         text-align: center;
         font-size: 20px;
     }
-    
+
     .livro-detalhes-botoes {
         flex-direction: column;
         gap: 10px;
     }
 
-    .btn-voltar-detalhes, .btn-reservar-detalhes, .btn-esgotado {
+    .btn-voltar-detalhes,
+    .btn-reservar-detalhes,
+    .btn-esgotado {
         width: 100%;
     }
 }
@@ -305,29 +333,31 @@
     }
 
     .livro-detalhes-header h2 {
-        font-size: 25px; 
+        font-size: 25px;
     }
 
     .capa-detalhes,
     .capa-placeholder-detalhes {
-        width: 150px; 
+        width: 150px;
     }
 
     .status-tag {
         margin-top: -30px;
         font-size: 15px;
     }
-    
+
     .livro-dados-texto p {
         font-size: 20px;
     }
-    
+
     .livro-detalhes-botoes {
         gap: 8px;
     }
-    
-    .btn-voltar-detalhes, .btn-reservar-detalhes, .btn-esgotado {
-        padding: 8px 10px; 
+
+    .btn-voltar-detalhes,
+    .btn-reservar-detalhes,
+    .btn-esgotado {
+        padding: 8px 10px;
     }
 }
 
@@ -341,7 +371,7 @@
     .tabela-estoque {
         display: block;
         width: 100%;
-        overflow-x: auto; 
+        overflow-x: auto;
         white-space: nowrap;
     }
 
@@ -359,7 +389,7 @@
 
     .tabela-estoque {
         border-collapse: collapse;
-        display: block; 
+        display: block;
         width: 100%;
     }
 
@@ -382,21 +412,21 @@
         border-bottom: none;
         padding: 5px;
     }
-    
+
     .tabela-estoque tbody {
         display: block;
         width: 100%;
     }
 
     .tabela-estoque tbody tr {
-        display: grid; 
+        display: grid;
         grid-template-columns: repeat(2, 1fr);
         margin-bottom: 10px;
         border: 1px solid #ddd;
         border-radius: 8px;
         padding: 10px;
     }
-    
+
     .tabela-estoque tbody td {
         display: block;
         text-align: left;
@@ -413,7 +443,7 @@
         justify-content: center;
         gap: 5px;
         padding-top: 10px;
-        grid-column: 1 / span 2; 
+        grid-column: 1 / span 2;
     }
 
     .botoes-acao .btn-editar,
@@ -427,9 +457,9 @@
 /* RESPONSIVIDADE PARA O MODAL */
 @media (max-width: 768px) {
     .modal-conteudo {
-        width: 80%; 
-        margin: 10% auto; 
-        padding: 10px; 
+        width: 80%;
+        margin: 10% auto;
+        padding: 10px;
     }
 
     .modal-conteudo h3 {
@@ -437,23 +467,24 @@
     }
 
     .modal-botoes {
-        gap: 5px; 
+        gap: 5px;
     }
 
-    .btn-salvar-modal, .btn-voltar-modal {
-        padding: 8px 15px; 
+    .btn-salvar-modal,
+    .btn-voltar-modal {
+        padding: 8px 15px;
     }
 }
 
 @media (max-width: 480px) {
     .modal-conteudo {
-        width: 80%; 
+        width: 80%;
         margin: 30% auto;
         padding: 10px;
     }
 
     .form-grid {
-        display: flex; 
+        display: flex;
         flex-direction: column;
         gap: 10px;
     }
@@ -463,8 +494,9 @@
         gap: 5px;
     }
 
-    .btn-salvar-modal, .btn-voltar-modal {
-        width: 100%; 
+    .btn-salvar-modal,
+    .btn-voltar-modal {
+        width: 100%;
         padding: 10px;
     }
 }

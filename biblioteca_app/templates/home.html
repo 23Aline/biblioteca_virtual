@@ -8,8 +8,9 @@
     <title>Acervo Digital</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" />
-    </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" />
+</head>
 
 <body>
     <header>
@@ -23,13 +24,8 @@
             </button>
         </div>
 
-        <div class="buscador">
-            <form action="{% url 'home' %}" method="GET" class="pesquisa">
-                <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar por título, autor ou gênero..." id="buscar">
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </form>
-        </div>
-    </header> <nav id="side-menu" class="side-menu">
+    </header>
+    <nav id="side-menu" class="side-menu">
         <ul>
             <li><a href="{% url 'cadastro_livros' %}">Cadastro de Livros</a></li>
             <li><a href="{% url 'cadastro_leitor' %}">Cadastro de Leitor</a></li>
@@ -42,6 +38,13 @@
     </nav>
 
     <main>
+        <div class="buscador">
+            <form action="{% url 'home' %}" method="GET" class="pesquisa">
+                <input type="text" name="q" value="{{ request.GET.q }}"
+                    placeholder="Pesquisar por título, autor ou gênero..." id="buscar">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
         <div class="livros-grid">
             {% for livro in livros %}
             <a href="{% url 'livro_detalhes' livro.id %}" class="livro-card">

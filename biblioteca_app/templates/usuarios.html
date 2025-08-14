@@ -51,16 +51,17 @@
                 </thead>
                 <tbody>
                     {% for leitor in leitores %}
-                    <tr data-leitor-id="{{ leitor.id }}">
+                    <tr data-leitor-id="{{ leitor.id }}" 
+                        data-nome="{{ leitor.nome }}"
+                        data-celular="{{ leitor.celular }}" 
+                        data-email="{{ leitor.email }}" 
+                        data-cep="{{ leitor.cep }}"
+                        data-endereco="{{ leitor.endereco }}" 
+                        data-complemento="{{ leitor.complemento }}"
+                        data-cidade="{{ leitor.cidade }}">
                         <td>{{ leitor.nome }}</td>
                         <td>{{ leitor.cpf }}</td>
-                        <td>
-                            {% if leitor.possui_multa %}
-                            Sim
-                            {% else %}
-                            Não
-                            {% endif %}
-                        </td>
+                        <td>{% if leitor.possui_multa %}Sim{% else %}Não{% endif %}</td>
                         <td class="botoes-acao">
                             <button class="btn-editar" data-leitor-id="{{ leitor.id }}">Editar</button>
                             <a href="{% url 'excluir_leitor' leitor.id %}" class="btn-excluir">Excluir</a>

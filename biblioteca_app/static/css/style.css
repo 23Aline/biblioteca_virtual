@@ -162,7 +162,7 @@ main {
     grid-template-columns: repeat(7, 1fr); 
     gap: 30px; 
     padding: 20px;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .livro-card {
@@ -222,15 +222,13 @@ main {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background-color: #9ABF80; 
-    border-top: 1px solid #739d5b; 
     position: fixed;
     top: 95px; 
     left: 0;
     width: 100%;
-    z-index: 1009; 
+    z-index: 100; 
+    background-color: #9ABF80;
 }
-
 
 .pesquisa {
     display: flex;
@@ -242,7 +240,6 @@ main {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 
 #buscar {
     flex-grow: 1;
@@ -256,7 +253,6 @@ main {
 #buscar::placeholder {
     color: #999;
 }
-
 
 .pesquisa button {
     background-color: #1C325B; 
@@ -272,36 +268,6 @@ main {
 
 .pesquisa button:hover {
     background-color: #8693ab; 
-}
-
-/* Ajuste do main para a navbar fixa + buscador */
-main {
-    padding-top: 160px; 
-}
-
-/* Ajustes para telas menores */
-@media (max-width: 768px) {
-    .buscador {
-        top: 85px; /* Ajuste para a navbar em telas menores, se necessário */
-    }
-    
-    .pesquisa {
-        border-radius: 20px;
-        max-width: 90%;
-    }
-
-    #buscar {
-        padding: 8px 15px;
-        font-size: 0.9rem;
-    }
-    
-    .pesquisa button {
-        padding: 8px 12px;
-    }
-
-    main {
-        padding-top: 150px;
-    }
 }
 
 /*TELA DE CADASTRO DE LEITOR*/

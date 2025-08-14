@@ -69,8 +69,9 @@
                     <h3>Descrição:</h3>
                     <p>{{ livro.sinopse }}</p>
                     {% if not disponivel and data_devolucao_proxima %}
-                    <p class="data-devolucao-info">Data de devolução mais próxima: {{
-                        data_devolucao_proxima|date:"d/m/Y" }}</p>
+                    <p class="data-devolucao-info">
+                        Data de devolução mais próxima: {{ data_devolucao_proxima|date:"d/m/Y" }}
+                    </p>
                     {% endif %}
                 </div>
             </div>
