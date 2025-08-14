@@ -832,3 +832,32 @@ main {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* Tela Multa */
+.multa-container {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.tabela-multa {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-multa thead th {
+    background-color: black;
+    color: white;
+    padding: 15px;
+    text-align: left;
+}
+
+.tabela-multa tbody td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-multa tbody tr:nth-child(even) {
+    background-color: #e9e9e9;
+}
