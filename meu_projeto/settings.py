@@ -31,7 +31,7 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Recomenda-se preencher com os domínios reais em produção via .env
 ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', '')
-ALLOWED_HOSTS = ALLOWED_HOSTS_ENV.split(',') if ALLOWED_HOSTS_ENV else ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ALLOWED_HOSTS_ENV.split(',') if ALLOWED_HOSTS_ENV else ['127.0.0.1', 'localhost',  'biblioteca-virtual-gctg.onrender.com']
 
 # Application definition
 
